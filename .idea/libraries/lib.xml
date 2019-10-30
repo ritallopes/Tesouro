@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/java-telegram-bot-api/library/src/main/java" />
+      <root url="file://$PROJECT_DIR$/lib/java-telegram-bot-api/library/src/test/java" />
+      <root url="file://$PROJECT_DIR$/lib/java-telegram-bot-api/sample/src/main/java" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+  </library>
+</component>
