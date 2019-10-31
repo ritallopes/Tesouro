@@ -1,29 +1,19 @@
-package br.com.ufrn.imd.lpii.categoriaDeBem;
+package br.com.ufrn.imd.lpii.entities.localizacao;
 
-public class Categoria {
-    private Integer codigo;
+public class Localizacao {
     private String nome;
     private String descricao;
 
     //Construtores
-    public Categoria() {
+    public Localizacao() {
     }
 
-    public Categoria(Integer codigo, String nome, String descricao) {
-        this.codigo = codigo;
+    public Localizacao(String nome, String descricao) {
         this.nome = nome;
         this.descricao = descricao;
     }
 
     //getters e setters
-    public Integer getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
-    }
-
     public String getNome() {
         return nome;
     }

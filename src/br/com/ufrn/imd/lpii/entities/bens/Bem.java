@@ -1,7 +1,8 @@
-package br.com.ufrn.imd.lpii.bens;
+package br.com.ufrn.imd.lpii.entities.bens;
 
-import br.com.ufrn.imd.lpii.categoriaDeBem.Categoria;
-import br.com.ufrn.imd.lpii.localizacao.Localizacao;
+import br.com.ufrn.imd.lpii.entities.Categoria;
+import br.com.ufrn.imd.lpii.entities.categoriaDeBem.Categoria;
+import br.com.ufrn.imd.lpii.entities.localizacao.Localizacao;
 
 public class Bem {
     private Integer codigo;
