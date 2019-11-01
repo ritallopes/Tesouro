@@ -1,6 +1,5 @@
 package br.com.ufrn.imd.lpii.entities.bens;
 
-import br.com.ufrn.imd.lpii.entities.Categoria;
 import br.com.ufrn.imd.lpii.entities.categoriaDeBem.Categoria;
 import br.com.ufrn.imd.lpii.entities.localizacao.Localizacao;
 

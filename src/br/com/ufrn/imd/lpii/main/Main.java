@@ -56,7 +56,10 @@ public class Main {
 
                 //envio da mensagem de resposta
                 //brincando com o bot
-                if (update.message().text().equals("você é um autobot?")) {
+                if(update.message().text().equals("/cadastrar_localizacao")){
+                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Deu certo"));
+
+                } else if (update.message().text().equals("você é um autobot?")) {
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Não. Também não conheço Optimus Prime... ops..."));
                     //verificação se a mensagem foi enviada com sucesso
                     System.out.println("Mensagem enviada? " + sendResponse.isOk());
