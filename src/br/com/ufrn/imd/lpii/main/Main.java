@@ -1,5 +1,6 @@
 package br.com.ufrn.imd.lpii.main;
 
+import br.com.ufrn.imd.lpii.entities.localizacao.Localizacao;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
@@ -35,6 +36,7 @@ public class Main {
 
         //loop infinito, que pode ser alterado para algum timer de intervalo curto
         while (true) {
+            System.out.println("Info: Buscando novas mensagens...");
             //executa comando no Telegram para obter as mensagens pendentes a partir de um off-set (limite inicial)
             updatesResponse = bot.execute(new GetUpdates().limit(100).offset(m));
 
@@ -45,6 +47,7 @@ public class Main {
             for (Update update : updates) {
                 //atualização do offset
                 m = update.updateId() + 1;
+                String mensagem = update.message().text();
 
                 System.out.println("Recebendo mensagem: " + update.message().text());
 
@@ -57,7 +60,8 @@ public class Main {
                 //envio da mensagem de resposta
                 //brincando com o bot
                 if(update.message().text().equals("/cadastrar_localizacao")){
-                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Deu certo"));
+                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Deu certo?" + Localizacao.cadastrarLocalizacao(bot, update)));
+
 
                 } else if (update.message().text().equals("você é um autobot?")) {
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Não. Também não conheço Optimus Prime... ops..."));
