@@ -2,9 +2,7 @@ package br.com.ufrn.imd.lpii.entities.localizacao;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 
 public class Localizacao {
@@ -38,12 +36,23 @@ public class Localizacao {
     }
 
     //método em fase de testes, pode estar meio maluco
-    public static boolean cadastrarLocalizacao(TelegramBot bot, Update update){
-        //System.out.println("digite a localizacao: ");
+    public static boolean cadastrarLocalizacao(TelegramBot bot, Update update) {
+        String local = null;
+        SendResponse sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
 
-        SendResponse sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "digite a localizacao: "));
-        String mensagem = update.message().text();
-        System.out.println(mensagem);
+        if(update.message().text().charAt(0) != '/'){
+            local = update.message().text();
+        }
+        if(local == null){
+            return false;
+        }
+        //SendResponse sendResponse2 = bot.execute(new SendMessage(update.message().chat().id(), "Digite a descricao de " + local + " : "));
+
+        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Sua localizacao é: " + local));
+
         return true;
+
     }
+
+
 }
