@@ -1,5 +1,6 @@
 package br.com.ufrn.imd.lpii.main;
 
+import br.com.ufrn.imd.lpii.entities.localizacao.Localizacao;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
@@ -14,11 +15,12 @@ import com.pengrad.telegrambot.response.SendResponse;
 import java.util.List;
 
 public class Bot {
+    //precisamos de variaveis estaticas pois se nao perderemos os dados inseridos pelo usuario antes de inserir no banco de dados
     private static Estado estado = Estado.standby;
     private static String localizacao;
     private static String descricao;
 
-    public static void inicializacaoBot(String token){
+    public static <localizacao> void inicializacaoBot(String token){
 
         //token do nosso bot patrimonial: 1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc
 
@@ -26,7 +28,7 @@ public class Bot {
         TelegramBot bot = TelegramBotAdapter.build(token);
 
         //objeto responsavel por receber as mensagens
-        GetUpdatesResponse updatesResponse;
+        GetUpdatesResponse updatesResponse = null;
 
         //objeto responsavel por gerenciar o envio de respostas
         SendResponse sendResponse;
@@ -41,7 +43,11 @@ public class Bot {
             while (!check) {
                 System.out.println("Info: Buscando novas mensagens...");
                 //executa comando no Telegram para obter as mensagens pendentes a partir de um off-set (limite inicial)
-                updatesResponse = bot.execute(new GetUpdates().limit(100).offset(m));
+                try{
+                    updatesResponse = bot.execute(new GetUpdates().limit(100).offset(m));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
                 //lista de mensagens
                 List<Update> updates = updatesResponse.updates();
@@ -50,6 +56,7 @@ public class Bot {
                 for (Update update : updates) {
                     //atualização do offset
                     m = update.updateId() + 1;
+
                     String mensagem = update.message().text();
 
                     System.out.println("Recebendo mensagem: " + update.message().text());
@@ -60,39 +67,38 @@ public class Bot {
                     //verificação de ação de chat foi enviada com sucesso
                     System.out.println("Resposta de ChatAction foi enviada? " + baseResponse.isOk());
 
-                    //envio da mensagem de resposta
-                    //brincando com o bot
+
+                    //se o estado for stand-by(padrao)
+                    if(estado == Estado.standby){
+                        //se o usuario quer cadastrar localizacao
+                        if(update.message().text().equals("/cadastrar_localizacao")){
+                            //enviando ao usuario a mensagem para inserir a localizacao
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
+                            //mudando o estado
+                            estado = Estado.cadastrar_localizacao;
+                            break;
+                        }
+                    }
+                    //se o esstado tiver sido alterado para cadastrar_localizacao
                     if(estado == Estado.cadastrar_localizacao){
                         if(contador == 0){
-                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
+                            //pede ao usuario o proximo campo que deve ser inserido
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descricao do local"));
                             localizacao = update.message().text();
                             contador++;
-
+                            break;
                         }else{
-                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descricao do local"));
                             descricao = update.message().text();
                             contador++;
+                            estado = Estado.standby; //depois de todos os campos preeenchidos, volta ao estado standd-by
                         }
+                        contador = 0;
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local: "+ localizacao));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
+                        Localizacao local = new Localizacao(localizacao, descricao);
                         break;
                     }
 
-                    if (update.message().text().equals("/cadastrar_localizacao")) {
-                        estado = Estado.cadastrar_localizacao;
-                        break;
-
-                       /* sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
-                        if(update.message().text().charAt(0) != '/'){
-                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), update.message().text()));
-                        }
-                        contador = 1;*/
-
-                        //check = true;
-                        //sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "" + Localizacao.cadastrarLocalizacao(bot, update)));
-                       // break;
-
-                    }
                     if (update.message().text().equals("/cadastrar_categoria_do_bem")) {
                         //sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "" + Localizacao.cadastrarLocalizacao(bot, update)));
 
