@@ -1,7 +1,7 @@
 package br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem;
 
 public class Categoria {
-    private Integer codigo;
+    private String codigo;
     private String nome;
     private String descricao;
 
@@ -9,18 +9,18 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Categoria(Integer codigo, String nome, String descricao) {
+    public Categoria(String codigo, String nome, String descricao) {
         this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
     }
 
     //getters e setters
-    public Integer getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(Integer codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 

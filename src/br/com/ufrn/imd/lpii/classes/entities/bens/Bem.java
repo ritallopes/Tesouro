@@ -4,7 +4,7 @@ import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
 import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
 
 public class Bem {
-    private Integer codigo;
+    private String codigo;
     private String nome;
     private String descricao;
     private Localizacao localizacao;
@@ -13,7 +13,7 @@ public class Bem {
     //Construtores
     public Bem(){}
 
-    public Bem(Integer codigo, String nome, String descricao, Localizacao localizacao, Categoria categoria) {
+    public Bem(String codigo, String nome, String descricao, Localizacao localizacao, Categoria categoria) {
         this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
@@ -22,11 +22,11 @@ public class Bem {
     }
 
     //getters e setters
-    public Integer getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(Integer codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
