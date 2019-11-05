@@ -3,9 +3,13 @@ package br.com.ufrn.imd.lpii.classes.persistence;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ConnectionSQLite {
-    private Connection connection = null;
+    Connection connection = null;
+
+    Statement statement = null;
+
     public Boolean conectar() {
         try {
             // arquivo do banco de dados
@@ -41,4 +45,6 @@ public class ConnectionSQLite {
         }
 
     }
+
+
 }

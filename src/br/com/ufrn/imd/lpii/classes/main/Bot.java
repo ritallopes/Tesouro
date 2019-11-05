@@ -101,7 +101,7 @@ public class Bot {
                     }
 
                     if (update.message().text().equals("/cadastrar_categoria_do_bem")) {
-                        //sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "" + Localizacao.cadastrarLocalizacao(bot, update)));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "" + Localizacao.cadastrarLocalizacao(bot, update)));
 
 
                     }if(update.message().text().equals("/cadastrar_bem")){
