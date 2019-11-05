@@ -44,25 +44,6 @@ public class ConnectionCategoria extends ConnectionSQLite {
 
 
 
-    public Boolean apagarTabela(String nomeTabela){
-        try {
-            if (connection.isClosed() == false){
-                statement = connection.createStatement();
-                String sql = "DROP TABLE IF EXISTS "+nomeTabela+";";
-                statement.executeUpdate(sql);
-                statement.close();
-                return true;
-            }else{
-                conectar();
-                apagarTabela(nomeTabela);
-            }
-        }catch (SQLException e){
-            System.out.println("Erro ao APAGAR tabela Categoria");
-            return false;
-        }
-
-        return null;
-    }
 
 
 

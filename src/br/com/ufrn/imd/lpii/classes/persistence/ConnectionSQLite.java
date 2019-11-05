@@ -6,8 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ConnectionSQLite {
-    Connection connection = null;
 
+    //Variaveis com padrão default para que as classes filhas possam herdar as variaveis de conexão
+    Connection connection = null;
     Statement statement = null;
 
     public Boolean conectar() {
@@ -45,6 +46,28 @@ public class ConnectionSQLite {
         }
 
     }
+
+
+    public Boolean apagarTabela(String nomeTabela){
+        try {
+            if (connection.isClosed() == false){
+                statement = connection.createStatement();
+                String sql = "DROP TABLE IF EXISTS "+nomeTabela+";";
+                statement.executeUpdate(sql);
+                statement.close();
+                return true;
+            }else{
+                conectar();
+                apagarTabela(nomeTabela);
+            }
+        }catch (SQLException e){
+            System.out.println("Erro ao APAGAR tabela Categoria");
+            return false;
+        }
+
+        return null;
+    }
+
 
 
 }
