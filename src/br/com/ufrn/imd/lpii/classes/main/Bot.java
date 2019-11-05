@@ -6,9 +6,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ChatAction;
-import com.pengrad.telegrambot.request.GetUpdates;
-import com.pengrad.telegrambot.request.SendChatAction;
-import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.*;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -62,7 +60,7 @@ public class Bot {
                     //atualização do offset
                     m = update.updateId() + 1;
 
-                    String mensagem = update.message().text();
+                   // String mensagem = update.message().text();
 
                     System.out.println("Recebendo mensagem: " + update.message().text());
 
@@ -82,6 +80,12 @@ public class Bot {
                             //mudando o estado
                             estado = Estado.cadastrar_localizacao;
                             break;
+                        }
+                        if(update.message().text().equals("/feio")){
+                            estado = Estado.feio;
+                        }
+                        if(update.message().text().equals("/choro")){
+                            estado = Estado.choro;
                         }
                         //se o usuario quer cadastrar categoria de bem
                         if(update.message().text().equals("/cadastrar_categoria_do_bem")){
@@ -197,7 +201,16 @@ public class Bot {
 
                     } if(update.message().text().equals("/movimentar_bem")){
 
-                    } else if (update.message().text().equals("você é um autobot?")) {
+                    } if(estado == Estado.feio){
+                        sendResponse = bot.execute(new SendPhoto(update.message().chat().id(),"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBPOml4UFrbZlhVdlmnUF6eMm8rWrp7nn4PD9WvrV2lwmG899p&s"));
+                        estado = Estado.standby;
+                        break;
+                    } if(estado == Estado.choro){
+                        sendResponse = bot.execute(new SendVoice(update.message().chat().id(), "AwADAQADiQADcOwQRmgkTkCyMlHGFgQ"));
+                        estado = Estado.standby;
+                        break;
+                    }
+                    else if (update.message().text().equals("você é um autobot?")) {
 
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Não. Também não conheço Optimus Prime... ops..."));
                         //verificação se a mensagem foi enviada com sucesso
@@ -213,13 +226,6 @@ public class Bot {
                 }
 
             }
-
-
-
-
             }
-
-
-
 
 }
