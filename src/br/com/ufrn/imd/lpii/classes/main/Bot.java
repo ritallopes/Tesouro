@@ -176,7 +176,10 @@ public class Bot {
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Codigo: "+ codigo));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Nome: "+ nome));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
+
+                        //metodo para pesquisar localizacao
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localizacao: " + localizacao));
+                        //metodo para pesquisar categoria
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria: " + categoria));
                         //TODO->tem que fazer a verificao: codigo, categoria e localizacao
                        // Bem bem = new Bem(codigo, nome, descricao, localizacao, categoria);
