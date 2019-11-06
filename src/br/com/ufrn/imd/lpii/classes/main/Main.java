@@ -34,8 +34,8 @@ public class Main {
 
 
 
-
-        ArrayList<HashMap<String, String> > campos = connectionBem.listarBem();
+        /*
+        ArrayList<HashMap<String, String> > campos = connectionCategoria.listarCategoria();
 
 
         for (HashMap<String, String> tupla  : campos){
@@ -43,11 +43,12 @@ public class Main {
                 System.out.println(key +" : "+ tupla.get(key));
             }
             System.out.println();
-        }
+        }*/
 
        // Bot.inicializacaoBot("1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc");
         connectionBem.desconectar();
         connectionLocalizacao.desconectar();
+
         connectionCategoria.desconectar();
 
 
