@@ -34,22 +34,16 @@ public class Main {
 
 
 
-        /*
-        ArrayList<HashMap<String, String> > campos = connectionCategoria.listarCategoria();
 
 
-        for (HashMap<String, String> tupla  : campos){
-            for (String key : tupla.keySet()){
-                System.out.println(key +" : "+ tupla.get(key));
-            }
-            System.out.println();
-        }*/
-
-       // Bot.inicializacaoBot("1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc");
-        connectionBem.desconectar();
+         connectionBem.desconectar();
         connectionLocalizacao.desconectar();
 
         connectionCategoria.desconectar();
+
+
+       Bot.inicializacaoBot("1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc");
+
 
 
     }

@@ -1,7 +1,7 @@
 package br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem;
 
 public class Categoria {
-    private String codigo;
+    private Integer codigo;
     private String nome;
     private String descricao;
 
@@ -9,18 +9,18 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Categoria(String codigo, String nome, String descricao) {
+    public Categoria(Integer codigo, String nome, String descricao) {
         this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
     }
 
     //getters e setters
-    public String getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 
@@ -38,5 +38,20 @@ public class Categoria {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    @Override
+    public String toString() {
+        return "Codigo: "+this.codigo.toString()+"\n"+"" +
+                "Nome: "+this.nome+"\n"+
+                "Descricao: "+this.descricao+"\n";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Categoria)){
+            return false;
+        }
+        return (this.codigo == ((Categoria)obj).getCodigo());
     }
 }

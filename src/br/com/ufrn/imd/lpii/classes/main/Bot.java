@@ -1,6 +1,11 @@
 package br.com.ufrn.imd.lpii.classes.main;
 
+import br.com.ufrn.imd.lpii.classes.entities.bens.Bem;
+import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
 import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
+import br.com.ufrn.imd.lpii.classes.persistence.ConnectionBem;
+import br.com.ufrn.imd.lpii.classes.persistence.ConnectionCategoria;
+import br.com.ufrn.imd.lpii.classes.persistence.ConnectionLocalizacao;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
@@ -12,6 +17,8 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Bot {
@@ -96,29 +103,99 @@ public class Bot {
                         contador = 0;
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local: "+ localizacao));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
-                        Localizacao local = new Localizacao(localizacao, descricao);
+                        Localizacao local = new Localizacao(null, localizacao, descricao);
                         break;
                     }
 
                     if (update.message().text().equals("/cadastrar_categoria_do_bem")) {
+
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "" + Localizacao.cadastrarLocalizacao(bot, update)));
 
 
                     }if(update.message().text().equals("/cadastrar_bem")){
 
                     } if(update.message().text().equals("/listar_localizacoes")){
+                        ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
+                        connectionLocalizacao.conectar();
+                        ArrayList<Localizacao> localizacoes = connectionLocalizacao.listarLocalizacoes();
+                        String resposta = "";
+                        for (Localizacao localizacao : localizacoes){
+                           resposta += localizacao.toString();
+                            resposta +="-----------\n";
+                        }
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
 
-                    } if(update.message().text().equals("/listar_categorias")){
+                        connectionLocalizacao.desconectar();
 
-                    } if(update.message().text().equals("/listar_bens_por_localizacao")){
+                    }
 
-                    } if(update.message().text().equals("/buscar_bem_por_codigo")){
 
-                    } if(update.message().text().equals("/buscar_bem_por_nome")){
+                    if(update.message().text().equals("/listar_categorias")){
+                        ConnectionCategoria connectionCategoria = new ConnectionCategoria();
 
-                    } if(update.message().text().equals("/buscar_bem_por_descricao")){
+                        connectionCategoria.conectar();
+                        ArrayList<Categoria> categorias= connectionCategoria.listarCategorias();
+                        String resposta = "";
+                        for (Categoria categoria : categorias){
+                            resposta += categoria.toString();
+                            resposta +="-----------\n";
+                        }
+                        connectionCategoria.desconectar();
 
-                    } if(update.message().text().equals("/movimentar_bem")){
+
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+
+                    }
+                    if(update.message().text().equals("/listar_bens_por_localizacao")){
+
+                    }
+                    if(update.message().text().equals("/buscar_bem_por_codigo")){
+
+
+                        String codigo = "0"; //ler codigo digitado pelo user
+                        ConnectionBem connectionBem = new ConnectionBem();
+                        connectionBem.conectar();
+
+                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("codigo", codigo );//
+
+                        String resposta="";
+                        for (Bem bem : bens){
+                            resposta += bem.toString();
+                            resposta += "---------------\n";
+                        }
+                        connectionBem.desconectar();
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+
+
+                    }
+                    if(update.message().text().equals("/buscar_bem_por_nome")){
+                        String nome = "0"; //ler nome digitado pelo user
+                        ConnectionBem connectionBem = new ConnectionBem();
+                        connectionBem.conectar();
+                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("nome", nome );
+                        String resposta="";
+                        for (Bem bem : bens){
+                            resposta += bem.toString();
+                            resposta += "---------------\n";
+                        }
+                        connectionBem.desconectar();
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+
+                    }
+                    if(update.message().text().equals("/buscar_bem_por_descricao")){
+                        String nome = "0"; //ler descricao digitada pelo user
+                        ConnectionBem connectionBem = new ConnectionBem();
+                        connectionBem.conectar();
+                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("descricao", descricao );
+                        String resposta="";
+                        for (Bem bem : bens){
+                            resposta += bem.toString();
+                            resposta += "---------------\n";
+                        }
+                        connectionBem.desconectar();
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+                    }
+                    if(update.message().text().equals("/movimentar_bem")){
 
                     } else if (update.message().text().equals("você é um autobot?")) {
 

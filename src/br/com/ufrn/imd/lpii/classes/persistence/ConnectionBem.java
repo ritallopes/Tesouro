@@ -1,5 +1,9 @@
 package br.com.ufrn.imd.lpii.classes.persistence;
 
+import br.com.ufrn.imd.lpii.classes.entities.bens.Bem;
+import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
+import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,4 +137,65 @@ public class ConnectionBem  extends ConnectionSQLite {
         }
         return camposList;
     }
+
+
+    /**Busca no banco um
+     * @param
+     * @return */
+    public ArrayList<Bem> buscarBemByAtributo(String atributo, String value){
+        ArrayList<Bem> bens = null;
+            try {
+                if (connection.isClosed() == false){
+                    //configurações de variáveis para o banco
+                    statement = connection.createStatement();
+                    connection.setAutoCommit(false);
+                    statement = connection.createStatement();
+
+                    //script SQL
+                    ResultSet rs = statement.executeQuery( "SELECT * FROM BEM WHERE "+atributo.toUpperCase()+"="+value+";" );
+                    //organizando o Set lido do banco em outra variável (arraylist)
+                    while ( rs.next() ) {
+                        Bem bem = null;
+                        Integer codigo = rs.getInt("codigo");
+                        String  nome = rs.getString("nome");
+                        String descricao  = rs.getString("descricao");
+                        Integer localizacaoCodigo  = rs.getInt("localizacaocodigo");
+                        Integer categoriaCodigo  = rs.getInt("categoriacodigo");
+
+                        ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
+                        connectionLocalizacao.conectar();
+                        Localizacao localizacao = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacaoCodigo);
+                        connectionLocalizacao.desconectar();
+                        ConnectionCategoria connectionCategoria = new ConnectionCategoria();
+                        connectionCategoria.conectar();
+                        Categoria categoria = connectionCategoria.buscarCategoriaByCodigo(categoriaCodigo);
+                        connectionCategoria.desconectar();
+                        bem = new Bem(codigo, nome, descricao, localizacao, categoria);
+                        bens.add(bem);
+                    }
+
+                    rs.close();
+                    statement.close();
+
+                }else{
+                    conectar();
+                    criarTabela();
+                    return buscarBemByAtributo(atributo, value);
+                }
+            }catch (SQLException e){
+                System.out.println("Erro ao buscar");
+                e.printStackTrace();
+            }
+
+
+        return bens;
+    }
+
+
+
+    public ArrayList<Bem> buscarBemByLocalizacao(Localizacao localizacao){
+
+        return null;
+    }
+
 }
