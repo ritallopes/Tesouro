@@ -4,6 +4,15 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
 public class Localizacao {
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
+    private Integer codigo;
     private String nome;
     private String descricao;
 
@@ -11,7 +20,8 @@ public class Localizacao {
     public Localizacao() {
     }
 
-    public Localizacao(String nome, String descricao) {
+    public Localizacao(Integer codigo, String nome, String descricao) {
+        this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
     }
@@ -52,6 +62,23 @@ public class Localizacao {
 //        return true;
         return true;
 
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Codigo: "+this.codigo.toString()+"\n"+"" +
+                "Nome: "+this.nome+"\n"+
+                "Descricao: "+this.descricao+"\n";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Localizacao)){
+            return false;
+        }
+        return (this.codigo == ((Localizacao)obj).getCodigo());
     }
 
 

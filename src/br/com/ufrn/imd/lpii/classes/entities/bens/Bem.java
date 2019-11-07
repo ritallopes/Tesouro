@@ -4,7 +4,7 @@ import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
 import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
 
 public class Bem {
-    private String codigo;
+    private Integer codigo;
     private String nome;
     private String descricao;
     private Localizacao localizacao;
@@ -13,7 +13,7 @@ public class Bem {
     //Construtores
     public Bem(){}
 
-    public Bem(String codigo, String nome, String descricao, Localizacao localizacao, Categoria categoria) {
+    public Bem(Integer codigo, String nome, String descricao, Localizacao localizacao, Categoria categoria) {
         this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
@@ -22,11 +22,11 @@ public class Bem {
     }
 
     //getters e setters
-    public String getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 
@@ -60,5 +60,23 @@ public class Bem {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Codigo: "+this.codigo.toString()+"\n"+"" +
+                "Nome: "+this.nome+"\n"+
+                "Descricao: "+this.descricao+"\n"+
+                "Nome da Categoria: " + this.categoria.getNome()+"\n" +
+                "Localizacao : "+ this.localizacao.getNome()+"\n";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Bem)){
+            return false;
+        }
+        return ((this.codigo == ((Bem)obj).getCodigo()) && (this.categoria == ((Bem)obj).getCategoria()) && (this.localizacao == ((Bem)obj).getLocalizacao()));
     }
 }
