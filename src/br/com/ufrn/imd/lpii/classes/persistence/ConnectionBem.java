@@ -18,8 +18,6 @@ public class ConnectionBem  extends ConnectionSQLite {
     public Boolean criarTabela(){
         try {
             if (connection.isClosed() == false){
-
-
                 statement = connection.createStatement();
 
                 //se a tabela já existir no banco ele continua se capturar exceção
@@ -54,22 +52,19 @@ public class ConnectionBem  extends ConnectionSQLite {
 
 
 
-
-
-
-    public Boolean cadastrarBem( String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria){
-        try {
+    public Boolean cadastrarBem(Bem bem){
+        try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
             if (connection.isClosed() == false){
                 statement = connection.createStatement();
-                String sql ="INSERT INTO BEM( NOME, DESCRICAO, LOCALIZACAOCODIGO, CATEGORIACODIGO) " +
-                        "VALUES (\""+nome+"\",\""+descricao+"\","+codigoLocalizacao+", "+codigoCategoria+");";
+                String sql ="INSERT INTO BEM(CODIGO, NOME, DESCRICAO, LOCALIZACAOCODIGO, CATEGORIACODIGO) " +
+                        "VALUES (\""+bem.getCodigo()+"\", \""+bem.getNome()+"\",\""+bem.getDescricao()+"\","+bem.getLocalizacao().getCodigo()+", "+bem.getCategoria().getCodigo()+");";
                 statement.executeUpdate(sql);
                 statement.close();
                 return true;
             }else{
                 conectar();
                 criarTabela();
-                cadastrarBem( nome, descricao, codigoLocalizacao, codigoCategoria);
+                cadastrarBem(bem);
             }
         }catch (SQLException e){
             System.out.println("Erro ao cadastrar Bem");

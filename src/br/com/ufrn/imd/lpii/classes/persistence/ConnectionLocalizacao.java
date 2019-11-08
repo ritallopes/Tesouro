@@ -71,7 +71,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
 
     public Boolean cadastrarLocalizacao(Localizacao localizacao){
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 statement = connection.createStatement();
                 String sql ="INSERT INTO LOCALIZACAO ( NOME, DESCRICAO) " +
                         "VALUES (\""+localizacao.getNome()+"\",\""+localizacao.getDescricao()+"\");";
@@ -88,7 +88,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
             e.printStackTrace();
             return false;
         }
-        return null;
+        return true;
     }
 
 

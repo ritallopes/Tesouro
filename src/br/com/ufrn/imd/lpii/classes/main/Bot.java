@@ -18,7 +18,6 @@ import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Bot {
@@ -26,6 +25,9 @@ public class Bot {
     static Estado estado = Estado.standby;
     static String localizacao;
     static String descricao;
+    static Integer codigo;
+    static String nome;
+    static String categoria;
 
     public static <localizacao> void inicializacaoBot(String token){
 
@@ -45,9 +47,8 @@ public class Bot {
 
         //controle de offset, isto é, a partir desse ID serão lidas as mensagens pendentes na fila
         int m = 0, contador = 0;
-        boolean check = false;
         //loop infinito, que pode ser alterado para algum timer de intervalo curto
-            while (!check) {
+            while (true) {
                 System.out.println("Info: Buscando novas mensagens...");
                 //executa comando no Telegram para obter as mensagens pendentes a partir de um off-set (limite inicial)
                 try{
@@ -85,6 +86,24 @@ public class Bot {
                             estado = Estado.cadastrar_localizacao;
                             break;
                         }
+                        //se o usuario quer cadastrar categoria do bem
+                        if(update.message().text().equals("/cadastrar_categoria_do_bem")){
+                            //enviando ao usuario a mensagem para inserir o código
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código da categoria(ex: 123)"));
+                            //mudando o estado
+                            estado = Estado.cadastrar_categoria_do_bem;
+                            break;
+                        }
+                        //se o usuario quer cadastrar categoria do bem
+                        if(update.message().text().equals("/cadastrar_bem")){
+                            //enviando ao usuario a mensagem para inserir o código do bem
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código do bem(ex: 123)"));
+                            //mudando o estado
+                            estado = Estado.cadastrar_bem;
+                            break;
+                        }
+
+
                     }
 
                     //se o estado tiver sido alterado para cadastrar_localizacao
@@ -104,15 +123,103 @@ public class Bot {
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local: "+ localizacao));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
                         Localizacao local = new Localizacao(null, localizacao, descricao);
+
+                        ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
+                        connectionLocalizacao.conectar();
+                        if(connectionLocalizacao.cadastrarLocalizacao(local)){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localizacao inserida com sucesso!"));
+                        }
+                        connectionLocalizacao.desconectar();
+                        break;
+                    }
+                    //se o estado tiver sido alterado para cadastrar_localizacao
+                    if(estado == Estado.cadastrar_categoria_do_bem){
+                        if(contador == 0){
+                            //pede ao usuario o proximo campo que deve ser inserido
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria"));
+                            String codigoStr = update.message().text();
+                            codigo = Integer.parseInt(codigoStr);
+                            contador++;
+                            break;
+                        }else if(contador == 1){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descrição da categoria"));
+                            nome = update.message().text();
+                            contador++;
+                            break;
+                        }else{
+                            descricao = update.message().text();
+                            contador++;
+                            estado = Estado.standby; //depois de todos os campos preeenchidos, volta ao estado standd-by
+                        }
+                        contador = 0;
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Código: "+ codigo));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Nome: " + nome));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
+                        Categoria categoria = new Categoria(codigo, nome, descricao);
+
+                        ConnectionCategoria connectionCategoria = new ConnectionCategoria();
+                        connectionCategoria.conectar();
+                        if(connectionCategoria.cadastrarCategoria(categoria)){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria inserida com sucesso!"));
+                        }
+                        connectionCategoria.desconectar();
                         break;
                     }
 
-                    if (update.message().text().equals("/cadastrar_categoria_do_bem")) {
+                    //se o estado tiver sido alterado para cadastrar_localizacao
+                    if(estado == Estado.cadastrar_bem){
+                        if(contador == 0){
+                            //pede ao usuario o proximo campo que deve ser inserido
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome do bem"));
+                            String codigoStr = update.message().text();
+                            codigo = Integer.parseInt(codigoStr);
+                            contador++;
+                            break;
+                        }else if(contador == 1){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descrição do bem"));
+                            nome = update.message().text();
+                            contador++;
+                            break;
+                        }else if(contador == 2){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
+                            descricao = update.message().text();
+                            contador++;
+                            break;
+                        }else if(contador == 3){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria"));
+                            localizacao = update.message().text();
+                            contador++;
+                            break;
 
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "" + Localizacao.cadastrarLocalizacao(bot, update)));
+                        }
 
+                        else{
+                            categoria = update.message().text();
+                            contador++;
+                            estado = Estado.standby; //depois de todos os campos preeenchidos, volta ao estado standd-by
+                        }
+                        contador = 0;
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Código: "+ codigo));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Nome: " + nome));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localizacao: " + localizacao));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria: " + categoria));
 
-                    }if(update.message().text().equals("/cadastrar_bem")){
+                        Localizacao local = buscarLocalizacao(localizacao);
+                        Categoria cat = buscarCategoria(categoria);
+
+                        Bem bem = new Bem(codigo, nome, descricao, local, cat);
+
+                        ConnectionBem connectionBem = new ConnectionBem();
+                        connectionBem.conectar();
+                        if(connectionBem.cadastrarBem(bem)){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem inserido com sucesso!"));
+                        }
+                        connectionBem.desconectar();
+                        break;
+                    }
+
+                    if(update.message().text().equals("/cadastrar_bem")){
 
                     } if(update.message().text().equals("/listar_localizacoes")){
                         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
@@ -215,11 +322,37 @@ public class Bot {
             }
 
 
-
-
             }
 
+    private static Localizacao buscarLocalizacao(String local) {
+        ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
+        connectionLocalizacao.conectar();
+        ArrayList<Localizacao> localizacoes = connectionLocalizacao.listarLocalizacoes();
 
+        for (Localizacao localizacao : localizacoes){
+            if(localizacao.getNome().equals(local)){
+                connectionLocalizacao.desconectar();
+                return localizacao;
+            }
+        }
+        connectionLocalizacao.desconectar();
+        return null;
+    }
+
+    private static Categoria buscarCategoria(String cat) {
+        ConnectionCategoria connectionCategoria = new ConnectionCategoria();
+        connectionCategoria.conectar();
+        ArrayList<Categoria> categorias= connectionCategoria.listarCategorias();
+
+        for (Categoria categoria : categorias){
+            if(categoria.getNome().equals(cat)){
+                connectionCategoria.desconectar();
+                return categoria;
+            }
+        }
+        connectionCategoria.desconectar();
+        return null;
+    }
 
 
 }
