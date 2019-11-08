@@ -191,6 +191,7 @@ public class Bot {
                             contador++;
                             break;
 
+
                         }
 
                         else{
