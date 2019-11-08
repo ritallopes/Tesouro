@@ -190,8 +190,6 @@ public class Bot {
                             localizacao = update.message().text();
                             contador++;
                             break;
-
-
                         }
 
                         else{
