@@ -6,6 +6,7 @@ import br.com.ufrn.imd.lpii.classes.persistence.ConnectionLocalizacao;
 
 public class Main {
     public static void main(String[] args) {
+<<<<<<< HEAD
         ConnectionCategoria connectionCategoria = new ConnectionCategoria();
         connectionCategoria.conectar();
         connectionCategoria.criarTabela();
@@ -38,6 +39,9 @@ public class Main {
         connectionCategoria.desconectar();
 
 
+=======
+       
+>>>>>>> 71b3d4ed2087c0084b9f3eb323456e8683fc987d
        Bot.inicializacaoBot("1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc");
 
 
