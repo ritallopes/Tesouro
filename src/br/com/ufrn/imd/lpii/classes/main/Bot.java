@@ -132,7 +132,7 @@ public class Bot {
                         connectionLocalizacao.desconectar();
                         break;
                     }
-                    //se o estado tiver sido alterado para cadastrar_localizacao
+                    //se o estado tiver sido alterado para categoria de bem
                     if(estado == Estado.cadastrar_categoria_do_bem){
                         if(contador == 0){
                             //pede ao usuario o proximo campo que deve ser inserido
@@ -166,7 +166,7 @@ public class Bot {
                         break;
                     }
 
-                    //se o estado tiver sido alterado para cadastrar_localizacao
+                    //se o estado tiver sido alterado para cadastrar bem
                     if(estado == Estado.cadastrar_bem){
                         if(contador == 0){
                             //pede ao usuario o proximo campo que deve ser inserido
@@ -221,7 +221,8 @@ public class Bot {
 
                     if(update.message().text().equals("/cadastrar_bem")){
 
-                    } if(update.message().text().equals("/listar_localizacoes")){
+                    }
+                    if(update.message().text().equals("/listar_localizacoes")){
                         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
                         connectionLocalizacao.conectar();
                         ArrayList<Localizacao> localizacoes = connectionLocalizacao.listarLocalizacoes();
