@@ -16,11 +16,21 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bot {
+public class Bot{
     //precisamos de variaveis estaticas pois se nao perderemos os dados inseridos pelo usuario antes de inserir no banco de dados
     static Estado estado = Estado.standby;
     static String localizacao;
@@ -47,6 +57,7 @@ public class Bot {
 
         //controle de offset, isto é, a partir desse ID serão lidas as mensagens pendentes na fila
         int m = 0, contador = 0;
+
         //loop infinito, que pode ser alterado para algum timer de intervalo curto
             while (true) {
                 System.out.println("Info: Buscando novas mensagens...");
@@ -66,8 +77,7 @@ public class Bot {
                     m = update.updateId() + 1;
 
                     String mensagem = update.message().text();
-
-                    System.out.println("Recebendo mensagem: " + update.message().text());
+                   // System.out.println("Recebendo mensagem: " + update.message().text());
 
                     //envio de 'escrevendo' antes de mandar a resposta
                     baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
@@ -321,9 +331,7 @@ public class Bot {
                 }
 
             }
-
-
-            }
+    }
 
     private static Localizacao buscarLocalizacao(String local) {
         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
@@ -354,6 +362,5 @@ public class Bot {
         connectionCategoria.desconectar();
         return null;
     }
-
 
 }
