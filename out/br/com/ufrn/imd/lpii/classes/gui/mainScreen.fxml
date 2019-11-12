@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
+
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.ufrn.imd.lpii.classes.gui.mainScreenController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+         <children>
+            <ScrollPane fx:id="scrollWindow" prefHeight="514.0" prefWidth="590.0">
+               <content>
+                  <TextFlow fx:id="displayArea" prefHeight="280.0" prefWidth="599.0">
+                     <opaqueInsets>
+                        <Insets bottom="20.0" left="5.0" right="5.0" top="10.0" />
+                     </opaqueInsets>
+                  </TextFlow>
+               </content>
+            </ScrollPane>
+            <HBox alignment="CENTER" prefHeight="305.0" prefWidth="590.0" spacing="200.0">
+               <children>
+                  <Button fx:id="startButton" mnemonicParsing="false" onAction="#startButtonPressed" prefHeight="26.0" prefWidth="134.0" text="Iniciar Bot" />
+                  <Button fx:id="finishButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="133.0" text="Encerrar Bot" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="5.0" right="5.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</StackPane>

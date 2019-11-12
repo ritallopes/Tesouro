@@ -23,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -58,6 +59,7 @@ public class Bot{
         //controle de offset, isto é, a partir desse ID serão lidas as mensagens pendentes na fila
         int m = 0, contador = 0;
 
+        //display.getChildren().add(new Text("Ok"));
         //loop infinito, que pode ser alterado para algum timer de intervalo curto
             while (true) {
                 System.out.println("Info: Buscando novas mensagens...");
