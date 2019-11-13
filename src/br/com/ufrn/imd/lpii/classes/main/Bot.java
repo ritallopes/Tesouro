@@ -3,11 +3,13 @@ package br.com.ufrn.imd.lpii.classes.main;
 import br.com.ufrn.imd.lpii.classes.entities.bens.Bem;
 import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
 import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
+import br.com.ufrn.imd.lpii.classes.gui.MainScreenController;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionBem;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionCategoria;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionLocalizacao;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
+import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ChatAction;
 import com.pengrad.telegrambot.request.GetUpdates;
@@ -17,7 +19,10 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -28,6 +33,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +46,9 @@ public class Bot{
     static String nome;
     static String categoria;
 
-    public static <localizacao> void inicializacaoBot(String token){
+
+
+    public static <localizacao> void inicializacaoBot(String token, TextFlow displayArea) throws IOException, InterruptedException {
 
         //token do nosso bot patrimonial: 1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc
 
@@ -58,6 +66,12 @@ public class Bot{
 
         //controle de offset, isto é, a partir desse ID serão lidas as mensagens pendentes na fila
         int m = 0, contador = 0;
+//        FXMLLoader loader = new FXMLLoader(Bot.class.getResource("../gui/mainScreen.fxml"));
+//        loader.load();
+//        MainScreenController controller = loader.getController();
+//        controller.updateDisplay(new Text("Ok"));
+        //addLine(displayArea, "Qualquer uma");
+
 
         //display.getChildren().add(new Text("Ok"));
         //loop infinito, que pode ser alterado para algum timer de intervalo curto
@@ -78,14 +92,16 @@ public class Bot{
                     //atualização do offset
                     m = update.updateId() + 1;
 
-                    String mensagem = update.message().text();
-                   // System.out.println("Recebendo mensagem: " + update.message().text());
+                    //String mensagem = update.message().text();
+
+                    addLine(displayArea, "                                              " + update.message().chat().firstName() + " : " + update.message().text() + "\n");
 
                     //envio de 'escrevendo' antes de mandar a resposta
                     baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
+                    //addLine(displayArea, ChatAction.typing.name());
 
                     //verificação de ação de chat foi enviada com sucesso
-                    System.out.println("Resposta de ChatAction foi enviada? " + baseResponse.isOk());
+                    //addLine(displayArea, "Resposta de ChatAction foi enviada? " + baseResponse.isOk() + "\n");
 
 
                     //se o estado for stand-by(padrao)
@@ -94,6 +110,7 @@ public class Bot{
                         if(update.message().text().equals("/cadastrar_localizacao")){
                             //enviando ao usuario a mensagem para inserir a localizacao
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
+                            addLine(displayArea, "Insira o nome da localização:\n");
                             //mudando o estado
                             estado = Estado.cadastrar_localizacao;
                             break;
@@ -102,6 +119,7 @@ public class Bot{
                         if(update.message().text().equals("/cadastrar_categoria_do_bem")){
                             //enviando ao usuario a mensagem para inserir o código
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código da categoria(ex: 123)"));
+                            addLine(displayArea, "Insira o código da categoria(ex: 123)\n");
                             //mudando o estado
                             estado = Estado.cadastrar_categoria_do_bem;
                             break;
@@ -123,6 +141,7 @@ public class Bot{
                         if(contador == 0){
                             //pede ao usuario o proximo campo que deve ser inserido
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descricao do local"));
+                            addLine(displayArea, "Insira a descrição do local: \n");
                             localizacao = update.message().text();
                             contador++;
                             break;
@@ -134,6 +153,7 @@ public class Bot{
                         contador = 0;
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local: "+ localizacao));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
+                        addLine(displayArea, "Local: " + localizacao + "\n" + "Descrição: " + descricao + "\n");
                         Localizacao local = new Localizacao(null, localizacao, descricao);
 
                         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
@@ -324,7 +344,7 @@ public class Bot{
                         System.out.println("Mensagem enviada? " + sendResponse.isOk());
                     } else {
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Não entendi..."));
-
+                        addLine(displayArea, "Não entendi....\n");
                         //verificação se a mensagem foi enviada com sucesso
                         System.out.println("Mensagem enviada? " + sendResponse.isOk());
                         break;
@@ -363,6 +383,15 @@ public class Bot{
         }
         connectionCategoria.desconectar();
         return null;
+    }
+
+    private static void addLine(TextFlow displayArea, String message) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                displayArea.getChildren().add(new Text(message));
+            }
+        });
     }
 
 }
