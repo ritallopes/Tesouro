@@ -25,6 +25,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -48,7 +49,7 @@ public class Bot{
 
 
 
-    public static <localizacao> void inicializacaoBot(String token, TextFlow displayArea) throws IOException, InterruptedException {
+    public static <localizacao> void inicializacaoBot(String token, TextFlow displayArea, Label botStatus) throws IOException, InterruptedException {
 
         //token do nosso bot patrimonial: 1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc
 
@@ -98,6 +99,7 @@ public class Bot{
 
                     //envio de 'escrevendo' antes de mandar a resposta
                     baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
+                    updateStatus(botStatus, ChatAction.typing.name());
                     //addLine(displayArea, ChatAction.typing.name());
 
                     //verificação de ação de chat foi enviada com sucesso
@@ -355,6 +357,8 @@ public class Bot{
             }
     }
 
+
+
     private static Localizacao buscarLocalizacao(String local) {
         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
         connectionLocalizacao.conectar();
@@ -390,6 +394,15 @@ public class Bot{
             @Override
             public void run() {
                 displayArea.getChildren().add(new Text(message));
+            }
+        });
+    }
+
+    private static void updateStatus(Label botStatus, String status) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                botStatus.setText(status);
             }
         });
     }
