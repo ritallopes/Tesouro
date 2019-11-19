@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ConnectionSQLite {
+public abstract class ConnectionSQLite {
 
     //Variaveis com padrão default para que as classes filhas possam herdar as variaveis de conexão
     Connection connection = null;
@@ -14,7 +14,7 @@ public class ConnectionSQLite {
     public Boolean conectar() {
         try {
             // arquivo do banco de dados
-            String url = "jdbc:sqlite:src\\br\\com\\ufrn\\imd\\lpii\\data\\tesouro.db";
+            String url = "jdbc:sqlite:src/br/com/ufrn/imd/lpii/data/tesouro.db";
             // create a connection to the database
             connection = DriverManager.getConnection(url);
             System.out.println("Conectado ao banco de dados");

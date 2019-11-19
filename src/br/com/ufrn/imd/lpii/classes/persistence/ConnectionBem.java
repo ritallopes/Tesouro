@@ -1,8 +1,8 @@
 package br.com.ufrn.imd.lpii.classes.persistence;
 
-import br.com.ufrn.imd.lpii.classes.entities.bens.Bem;
-import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
-import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
+import br.com.ufrn.imd.lpii.classes.entities.Bem;
+import br.com.ufrn.imd.lpii.classes.entities.Categoria;
+import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +25,7 @@ public class ConnectionBem  extends ConnectionSQLite {
                 String sql = "CREATE TABLE IF NOT EXISTS BEM" +
                         "(CODIGO INTEGER PRIMARY KEY  AUTOINCREMENT," +
                         " NOME          TEXT    NOT NULL, " +
+                        "  TOMBO TEXT ," +
                         " DESCRICAO          TEXT     NOT NULL," +
                         " LOCALIZACAOCODIGO INTEGER NOT NULL," +
                         " CATEGORIACODIGO INTEGER NOT NULL," +
@@ -56,8 +57,8 @@ public class ConnectionBem  extends ConnectionSQLite {
         try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
             if (connection.isClosed() == false){
                 statement = connection.createStatement();
-                String sql ="INSERT INTO BEM(CODIGO, NOME, DESCRICAO, LOCALIZACAOCODIGO, CATEGORIACODIGO) " +
-                        "VALUES (\""+bem.getCodigo()+"\", \""+bem.getNome()+"\",\""+bem.getDescricao()+"\","+bem.getLocalizacao().getCodigo()+", "+bem.getCategoria().getCodigo()+");";
+                String sql ="INSERT INTO BEM(CODIGO, NOME, TOMBO, DESCRICAO, LOCALIZACAOCODIGO, CATEGORIACODIGO) " +
+                        "VALUES (\""+bem.getCodigo()+"\", \""+bem.getNome()+"\",\""+bem.getTombo()+"\",\""+bem.getDescricao()+"\","+bem.getLocalizacao().getCodigo()+", "+bem.getCategoria().getCodigo()+");";
                 statement.executeUpdate(sql);
                 statement.close();
                 return true;
@@ -106,6 +107,9 @@ public class ConnectionBem  extends ConnectionSQLite {
                     String  nome = rs.getString("nome");
                     tupla.put("nome", nome);
 
+                    String  tombo = rs.getString("tombo");
+                    tupla.put("tombo", tombo);
+
                     String descricao  = rs.getString("descricao");
                     tupla.put("descricao", descricao);
 
@@ -153,6 +157,7 @@ public class ConnectionBem  extends ConnectionSQLite {
                         Bem bem = null;
                         Integer codigo = rs.getInt("codigo");
                         String  nome = rs.getString("nome");
+                        String  tombo = rs.getString("tombo");
                         String descricao  = rs.getString("descricao");
                         Integer localizacaoCodigo  = rs.getInt("localizacaocodigo");
                         Integer categoriaCodigo  = rs.getInt("categoriacodigo");
@@ -165,7 +170,7 @@ public class ConnectionBem  extends ConnectionSQLite {
                         connectionCategoria.conectar();
                         Categoria categoria = connectionCategoria.buscarCategoriaByCodigo(categoriaCodigo);
                         connectionCategoria.desconectar();
-                        bem = new Bem(codigo, nome, descricao, localizacao, categoria);
+                        bem = new Bem(codigo, nome,tombo, descricao, localizacao, categoria);
                         bens.add(bem);
                     }
 

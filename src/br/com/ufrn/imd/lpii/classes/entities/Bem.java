@@ -1,11 +1,9 @@
-package br.com.ufrn.imd.lpii.classes.entities.bens;
-
-import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
-import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
+package br.com.ufrn.imd.lpii.classes.entities;
 
 public class Bem {
     private Integer codigo;
     private String nome;
+    private String tombo;
     private String descricao;
     private Localizacao localizacao;
     private Categoria categoria;
@@ -13,7 +11,7 @@ public class Bem {
     //Construtores
     public Bem(){}
 
-    public Bem(Integer codigo, String nome, String descricao, Localizacao localizacao, Categoria categoria) {
+    public Bem(Integer codigo, String nome, String tombo, String descricao, Localizacao localizacao, Categoria categoria) {
         this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
@@ -36,6 +34,14 @@ public class Bem {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getTombo() {
+        return tombo;
+    }
+
+    public void setTombo(String tombo) {
+        this.tombo = tombo;
     }
 
     public String getDescricao() {

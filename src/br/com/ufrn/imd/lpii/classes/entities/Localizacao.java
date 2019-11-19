@@ -1,4 +1,4 @@
-package br.com.ufrn.imd.lpii.classes.entities.localizacao;
+package br.com.ufrn.imd.lpii.classes.entities;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;

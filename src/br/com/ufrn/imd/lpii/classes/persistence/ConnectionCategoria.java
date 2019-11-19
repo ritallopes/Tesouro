@@ -1,6 +1,6 @@
 package br.com.ufrn.imd.lpii.classes.persistence;
 
-import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
+import br.com.ufrn.imd.lpii.classes.entities.Categoria;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

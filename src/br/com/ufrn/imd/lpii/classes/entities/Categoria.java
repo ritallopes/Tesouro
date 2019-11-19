@@ -1,4 +1,4 @@
-package br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem;
+package br.com.ufrn.imd.lpii.classes.entities;
 
 public class Categoria {
     private Integer codigo;

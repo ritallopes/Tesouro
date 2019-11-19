@@ -1,15 +1,13 @@
 package br.com.ufrn.imd.lpii.classes.main;
 
-import br.com.ufrn.imd.lpii.classes.entities.bens.Bem;
-import br.com.ufrn.imd.lpii.classes.entities.categoriaDeBem.Categoria;
-import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
-import br.com.ufrn.imd.lpii.classes.gui.MainScreenController;
+import br.com.ufrn.imd.lpii.classes.entities.Bem;
+import br.com.ufrn.imd.lpii.classes.entities.Categoria;
+import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionBem;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionCategoria;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionLocalizacao;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
-import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ChatAction;
 import com.pengrad.telegrambot.request.GetUpdates;
@@ -18,21 +16,10 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
-import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +32,7 @@ public class Bot{
     static String descricao;
     static Integer codigo;
     static String nome;
+    static String tombo;
     static String categoria;
 
 
@@ -210,16 +198,21 @@ public class Bot{
                             contador++;
                             break;
                         }else if(contador == 1){
-                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descrição do bem"));
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o tombo do bem"));
                             nome = update.message().text();
                             contador++;
                             break;
                         }else if(contador == 2){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descrição do bem"));
+                            tombo = update.message().text();
+                            contador++;
+                            break;
+                        }else if(contador == 3){
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
                             descricao = update.message().text();
                             contador++;
                             break;
-                        }else if(contador == 3){
+                        }else if(contador == 4){
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria"));
                             localizacao = update.message().text();
                             contador++;
@@ -235,6 +228,7 @@ public class Bot{
                         contador = 0;
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Código: "+ codigo));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Nome: " + nome));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Tombo: " + tombo));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localizacao: " + localizacao));
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria: " + categoria));
@@ -242,7 +236,7 @@ public class Bot{
                         Localizacao local = buscarLocalizacao(localizacao);
                         Categoria cat = buscarCategoria(categoria);
 
-                        Bem bem = new Bem(codigo, nome, descricao, local, cat);
+                        Bem bem = new Bem(codigo, nome, tombo, descricao, local, cat);
 
                         ConnectionBem connectionBem = new ConnectionBem();
                         connectionBem.conectar();
@@ -289,6 +283,9 @@ public class Bot{
 
                     }
                     if(update.message().text().equals("/listar_bens_por_localizacao")){
+
+
+
 
                     }
                     if(update.message().text().equals("/buscar_bem_por_codigo")){

@@ -1,6 +1,6 @@
 package br.com.ufrn.imd.lpii.classes.persistence;
 
-import br.com.ufrn.imd.lpii.classes.entities.localizacao.Localizacao;
+import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
