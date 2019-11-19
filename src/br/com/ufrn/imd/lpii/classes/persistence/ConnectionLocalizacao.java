@@ -167,8 +167,9 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
 
                 //organizando o Set lido do banco em outra variável (arraylist)
                 while ( rs.next() ) {
+
                     Localizacao localizacao = null;
-                    Integer codigo = rs.getInt("codigo");
+                    Integer codigo = rs.getInt(1);
                     String  nome = rs.getString("nome");
                     String descricao  = rs.getString("descricao");
 

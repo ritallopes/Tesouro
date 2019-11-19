@@ -247,9 +247,6 @@ public class Bot{
                         break;
                     }
 
-                    if(update.message().text().equals("/cadastrar_bem")){
-
-                    }
                     if(update.message().text().equals("/listar_localizacoes")){
                         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
                         connectionLocalizacao.conectar();
@@ -290,7 +287,6 @@ public class Bot{
                     }
                     if(update.message().text().equals("/buscar_bem_por_codigo")){
 
-
                         String codigo = "0"; //ler codigo digitado pelo user
                         ConnectionBem connectionBem = new ConnectionBem();
                         connectionBem.conectar();
@@ -304,7 +300,6 @@ public class Bot{
                         }
                         connectionBem.desconectar();
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
-
 
                     }
                     if(update.message().text().equals("/buscar_bem_por_nome")){
