@@ -1,5 +1,7 @@
 package br.com.ufrn.imd.lpii.classes.main;
 
 public enum Estado {
-    standby, cadastrar_localizacao, cadastrar_categoria_do_bem, cadastrar_bem;
+    standby, cadastrar_localizacao, cadastrar_categoria_do_bem, cadastrar_bem, LISTAR_LOCALIZACOES, LISTAR_CATEGORIAS, LISTAR_BENS_DE_UMA_LOCALIZACAO,
+    BUSCAR_BEM_POR_CODIGO, BUSCAR_BEM_POR_NOME, BUSCAR_BEM_POR_DESCRICAO, MOVIMENTAR_BEM, GERAR_RELATORIO, GERAR_RELATORIO_ARQUIVO,
+    CARREGAR_DADOS, APAGAR_LOCALIZACAO, APAGAR_CATEGORIA, APAGAR_BEM;
 }

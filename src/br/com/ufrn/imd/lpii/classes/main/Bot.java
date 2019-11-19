@@ -122,10 +122,13 @@ public class Bot{
                             estado = Estado.cadastrar_bem;
                             break;
                         }
-
-
+                        //se o usuario quer listar as localizações
+//                        if(update.message().text().equals("/listar_localizacoes")){
+//                            estado = Estado.LISTAR_LOCALIZACOES;
+//                            break;
+//                        }
                     }
-
+                    System.out.println("Estado = " + estado);
                     //se o estado tiver sido alterado para cadastrar_localizacao
                     if(estado == Estado.cadastrar_localizacao){
                         if(contador == 0){
@@ -248,6 +251,7 @@ public class Bot{
                     }
 
                     if(update.message().text().equals("/listar_localizacoes")){
+                        System.out.println("Chegou estado");
                         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
                         connectionLocalizacao.conectar();
                         ArrayList<Localizacao> localizacoes = connectionLocalizacao.listarLocalizacoes();
@@ -257,8 +261,11 @@ public class Bot{
                             resposta +="-----------\n";
                         }
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+                       // addLine(displayArea, resposta);
 
                         connectionLocalizacao.desconectar();
+                        estado = Estado.standby;
+                        break;
 
                     }
 
