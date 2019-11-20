@@ -6,6 +6,7 @@ import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionBem;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionCategoria;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionLocalizacao;
+import br.com.ufrn.imd.lpii.exceptions.LocalizacaoNaoEncontradaException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
@@ -93,7 +94,6 @@ public class Bot{
                     //verificação de ação de chat foi enviada com sucesso
                     //addLine(displayArea, "Resposta de ChatAction foi enviada? " + baseResponse.isOk() + "\n");
 
-
                     //se o estado for stand-by(padrao)
                     if(estado == Estado.standby){
                         //se o usuario quer cadastrar localizacao
@@ -122,13 +122,28 @@ public class Bot{
                             estado = Estado.cadastrar_bem;
                             break;
                         }
+
+                        //caso o usuário queira movimentar o bem
+                        if (update.message().text().equals("/movimentar_bem")){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código do bem: "));
+                            estado = Estado.MOVIMENTAR_BEM;
+                            break;
+                        }
+
+
+                        //caso o usuário queira buscar um bem
+                        if (update.message().text().equals("/buscar_bem_por_codigo")){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código do bem: "));
+                            estado = Estado.BUSCAR_BEM_POR_CODIGO;
+                            break;
+                        }
                         //se o usuario quer listar as localizações
 //                        if(update.message().text().equals("/listar_localizacoes")){
 //                            estado = Estado.LISTAR_LOCALIZACOES;
 //                            break;
 //                        }
                     }
-                    System.out.println("Estado = " + estado);
+
                     //se o estado tiver sido alterado para cadastrar_localizacao
                     if(estado == Estado.cadastrar_localizacao){
                         if(contador == 0){
@@ -157,6 +172,7 @@ public class Bot{
                         connectionLocalizacao.desconectar();
                         break;
                     }
+
                     //se o estado tiver sido alterado para categoria de bem
                     if(estado == Estado.cadastrar_categoria_do_bem){
                         if(contador == 0){
@@ -250,65 +266,67 @@ public class Bot{
                         break;
                     }
 
-                    if(update.message().text().equals("/listar_localizacoes")){
-                        System.out.println("Chegou estado");
-                        ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
-                        connectionLocalizacao.conectar();
-                        ArrayList<Localizacao> localizacoes = connectionLocalizacao.listarLocalizacoes();
-                        String resposta = "";
-                        for (Localizacao localizacao : localizacoes){
-                           resposta += localizacao.toString();
-                            resposta +="-----------\n";
+
+                    //se o estado tiver sido alterado para cadastrar_localizacao
+                    if(estado == Estado.MOVIMENTAR_BEM){
+
+                        String nome_localizacao;
+                        Bem bemProcurado;
+                        if(contador == 0){
+                            //pede ao usuario o proximo campo que deve ser inserido
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localizaçao"));
+                            String codigoStr = update.message().text();
+                            codigo = Integer.parseInt(codigoStr);
+                            contador++;
+                            break;
+                        }else{
+                            nome_localizacao = update.message().text();
+                            contador++;
+                            estado = Estado.standby; //depois de todos os campos preeenchidos, volta ao estado standd-by
                         }
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
-                       // addLine(displayArea, resposta);
-
-                        connectionLocalizacao.desconectar();
-                        estado = Estado.standby;
-                        break;
-
-                    }
-
-
-                    if(update.message().text().equals("/listar_categorias")){
-                        ConnectionCategoria connectionCategoria = new ConnectionCategoria();
-
-                        connectionCategoria.conectar();
-                        ArrayList<Categoria> categorias= connectionCategoria.listarCategorias();
-                        String resposta = "";
-                        for (Categoria categoria : categorias){
-                            resposta += categoria.toString();
-                            resposta +="-----------\n";
-                        }
-                        connectionCategoria.desconectar();
-
-
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
-
-                    }
-                    if(update.message().text().equals("/listar_bens_por_localizacao")){
+                        contador = 0;
 
 
 
-
-                    }
-                    if(update.message().text().equals("/buscar_bem_por_codigo")){
-
-                        String codigo = "0"; //ler codigo digitado pelo user
                         ConnectionBem connectionBem = new ConnectionBem();
                         connectionBem.conectar();
+                        ArrayList<Bem> bens = new ArrayList<>();
+                        bens = connectionBem.buscarBemByAtributo("codigo", codigo.toString());
+                        bemProcurado = bens.get(0); //retorno unico
+                        System.out.println(bemProcurado.toString());
 
-                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("codigo", codigo );//
-
-                        String resposta="";
-                        for (Bem bem : bens){
-                            resposta += bem.toString();
-                            resposta += "---------------\n";
+                        Localizacao localizacao = buscarLocalizacao(nome_localizacao);
+                        try {
+                            connectionBem.atualizarLocalizacao(localizacao, bemProcurado);
+                        } catch (LocalizacaoNaoEncontradaException e) {
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), e.getMessage()));
                         }
-                        connectionBem.desconectar();
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
 
+                        bens = connectionBem.buscarBemByAtributo("codigo", codigo.toString());
+                        bemProcurado = bens.get(0); //retorno unico
+                        System.out.println(bemProcurado.toString());
+
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), bemProcurado.toString()));
+
+                        connectionBem.desconectar();
+
+
+                        break;
                     }
+
+
+
+                    if(estado == Estado.BUSCAR_BEM_POR_CODIGO){
+                        //pede ao usuario o codigo da localização
+                        codigo = Integer.parseInt(update.message().text()); //TODO pode disparar uma exceção
+                        ConnectionBem connectionBem = new ConnectionBem();
+                        connectionBem.conectar();
+                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("codigo", codigo.toString() );//
+                        connectionBem.desconectar();
+                        estado = Estado.standby;
+                    }
+
+
                     if(update.message().text().equals("/buscar_bem_por_nome")){
                         String nome = "0"; //ler nome digitado pelo user
                         ConnectionBem connectionBem = new ConnectionBem();
@@ -336,7 +354,56 @@ public class Bot{
                         connectionBem.desconectar();
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
                     }
+
+                    if(update.message().text().equals("/listar_localizacoes")){
+                        ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
+                        connectionLocalizacao.conectar();
+                        ArrayList<Localizacao> localizacoes = connectionLocalizacao.listarLocalizacoes();
+                        String resposta = "";
+                        for (Localizacao localizacao : localizacoes){
+                            resposta += localizacao.toString();
+                            resposta +="-----------\n";
+                        }
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+                        // addLine(displayArea, resposta);
+
+                        connectionLocalizacao.desconectar();
+                        estado = Estado.standby;
+                        break;
+
+                    }
+
+
+                    if(update.message().text().equals("/listar_categorias")){
+                        ConnectionCategoria connectionCategoria = new ConnectionCategoria();
+
+                        connectionCategoria.conectar();
+                        ArrayList<Categoria> categorias= connectionCategoria.listarCategorias();
+                        String resposta = "";
+                        for (Categoria categoria : categorias){
+                            resposta += categoria.toString();
+                            resposta +="-----------\n";
+                        }
+                        connectionCategoria.desconectar();
+
+
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+
+                        estado = Estado.standby;
+
+
+                    }
+                    if(update.message().text().equals("/listar_bens_por_localizacao")){
+
+
+                    }
+
+
+
                     if(update.message().text().equals("/movimentar_bem")){
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Simbora"));
+
+
 
                     } else if (update.message().text().equals("você é um autobot?")) {
 

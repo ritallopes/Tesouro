@@ -3,6 +3,7 @@ package br.com.ufrn.imd.lpii.classes.persistence;
 import br.com.ufrn.imd.lpii.classes.entities.Bem;
 import br.com.ufrn.imd.lpii.classes.entities.Categoria;
 import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
+import br.com.ufrn.imd.lpii.exceptions.LocalizacaoNaoEncontradaException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,6 +57,7 @@ public class ConnectionBem  extends ConnectionSQLite {
     public Boolean cadastrarBem(Bem bem){
         try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
             if (connection.isClosed() == false){
+                System.out.println(bem.toString());
                 statement = connection.createStatement();
                 String sql ="INSERT INTO BEM(CODIGO, NOME, TOMBO, DESCRICAO, LOCALIZACAOCODIGO, CATEGORIACODIGO) " +
                         "VALUES (\""+bem.getCodigo()+"\", \""+bem.getNome()+"\",\""+bem.getTombo()+"\",\""+bem.getDescricao()+"\","+bem.getLocalizacao().getCodigo()+", "+bem.getCategoria().getCodigo()+");";
@@ -65,14 +67,13 @@ public class ConnectionBem  extends ConnectionSQLite {
             }else{
                 conectar();
                 criarTabela();
-                cadastrarBem(bem);
+                return cadastrarBem(bem);
             }
         }catch (SQLException e){
             System.out.println("Erro ao cadastrar Bem");
             e.printStackTrace();
             return false;
         }
-        return null;
     }
 
 
@@ -138,7 +139,7 @@ public class ConnectionBem  extends ConnectionSQLite {
     }
 
 
-    /**Busca no banco um
+    /**Busca no banco um bem com o atributo correspondente ao enviado
      * @param
      * @return */
     public ArrayList<Bem> buscarBemByAtributo(String atributo, String value){
@@ -151,7 +152,7 @@ public class ConnectionBem  extends ConnectionSQLite {
                     statement = connection.createStatement();
 
                     //script SQL
-                    ResultSet rs = statement.executeQuery( "SELECT * FROM BEM WHERE "+atributo.toUpperCase()+"="+value+";" );
+                    ResultSet rs = statement.executeQuery( "SELECT * FROM BEM;" );
                     //organizando o Set lido do banco em outra variável (arraylist)
                     while ( rs.next() ) {
                         Bem bem = null;
@@ -171,6 +172,7 @@ public class ConnectionBem  extends ConnectionSQLite {
                         Categoria categoria = connectionCategoria.buscarCategoriaByCodigo(categoriaCodigo);
                         connectionCategoria.desconectar();
                         bem = new Bem(codigo, nome,tombo, descricao, localizacao, categoria);
+                        System.out.println(bem.toString());
                         bens.add(bem);
                     }
 
@@ -198,4 +200,37 @@ public class ConnectionBem  extends ConnectionSQLite {
         return null;
     }
 
+    public Boolean atualizarLocalizacao(Localizacao localizacao, Bem bem) throws LocalizacaoNaoEncontradaException{
+        try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
+            if (connection.isClosed() == false){
+                statement = connection.createStatement();
+
+                ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
+                connectionLocalizacao.conectar();
+                Localizacao localizacao1 = null;
+                localizacao1 = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacao.getCodigo());
+                connectionLocalizacao.desconectar();
+                if (localizacao1 != null){
+                    String sql ="UPDATE bem SET localizacaocodigo = "+localizacao1.getCodigo()+" WHERE codigo = "+ bem.getCodigo()+";";
+
+                    statement.executeUpdate(sql);
+                    statement.close();
+
+                    return true;
+                }else{
+                    throw new LocalizacaoNaoEncontradaException();
+                }
+
+
+            }else{
+                conectar();
+                criarTabela();
+                return atualizarLocalizacao(localizacao, bem);
+            }
+        }catch (SQLException e){
+            System.out.println("Erro ao movimentar Bem");
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
