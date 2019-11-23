@@ -3,6 +3,7 @@ package br.com.ufrn.imd.lpii.classes.persistence;
 import br.com.ufrn.imd.lpii.classes.entities.Bem;
 import br.com.ufrn.imd.lpii.classes.entities.Categoria;
 import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
+import br.com.ufrn.imd.lpii.classes.main.Bot;
 import br.com.ufrn.imd.lpii.exceptions.LocalizacaoNaoEncontradaException;
 
 import java.sql.ResultSet;
@@ -95,7 +96,6 @@ public class ConnectionBem  extends ConnectionSQLite {
                 //script SQL
                 ResultSet rs = statement.executeQuery( "SELECT * FROM BEM;" );
 
-
                 camposList = new ArrayList<>();
 
                 //organizando o Set lido do banco em outra variável (arraylist)
@@ -144,50 +144,50 @@ public class ConnectionBem  extends ConnectionSQLite {
      * @return */
     public ArrayList<Bem> buscarBemByAtributo(String atributo, String value){
         ArrayList<Bem> bens = null;
-            try {
-                if (connection.isClosed() == false){
-                    //configurações de variáveis para o banco
-                    statement = connection.createStatement();
-                    connection.setAutoCommit(false);
-                    statement = connection.createStatement();
+        try {
+            if (connection.isClosed() == false){
+                //configurações de variáveis para o banco
+                statement = connection.createStatement();
+                connection.setAutoCommit(false);
+                statement = connection.createStatement();
 
-                    //script SQL
-                    ResultSet rs = statement.executeQuery( "SELECT * FROM BEM;" );
-                    //organizando o Set lido do banco em outra variável (arraylist)
-                    while ( rs.next() ) {
-                        Bem bem = null;
-                        Integer codigo = rs.getInt("codigo");
-                        String  nome = rs.getString("nome");
-                        String  tombo = rs.getString("tombo");
-                        String descricao  = rs.getString("descricao");
-                        Integer localizacaoCodigo  = rs.getInt("localizacaocodigo");
-                        Integer categoriaCodigo  = rs.getInt("categoriacodigo");
+                //script SQL
+                ResultSet rs = statement.executeQuery( "SELECT * FROM BEM;" );
+                //organizando o Set lido do banco em outra variável (arraylist)
+                while ( rs.next() ) {
+                    Bem bem = null;
+                    Integer codigo = rs.getInt("codigo");
+                    String  nome = rs.getString("nome");
+                    String  tombo = rs.getString("tombo");
+                    String descricao  = rs.getString("descricao");
+                    Integer localizacaoCodigo  = rs.getInt("localizacaocodigo");
+                    Integer categoriaCodigo  = rs.getInt("categoriacodigo");
 
-                        ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
-                        connectionLocalizacao.conectar();
-                        Localizacao localizacao = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacaoCodigo);
-                        connectionLocalizacao.desconectar();
-                        ConnectionCategoria connectionCategoria = new ConnectionCategoria();
-                        connectionCategoria.conectar();
-                        Categoria categoria = connectionCategoria.buscarCategoriaByCodigo(categoriaCodigo);
-                        connectionCategoria.desconectar();
-                        bem = new Bem(codigo, nome,tombo, descricao, localizacao, categoria);
-                        System.out.println(bem.toString());
-                        bens.add(bem);
-                    }
-
-                    rs.close();
-                    statement.close();
-
-                }else{
-                    conectar();
-                    criarTabela();
-                    return buscarBemByAtributo(atributo, value);
+                    ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
+                    connectionLocalizacao.conectar();
+                    Localizacao localizacao = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacaoCodigo);
+                    connectionLocalizacao.desconectar();
+                    ConnectionCategoria connectionCategoria = new ConnectionCategoria();
+                    connectionCategoria.conectar();
+                    Categoria categoria = connectionCategoria.buscarCategoriaByCodigo(categoriaCodigo);
+                    connectionCategoria.desconectar();
+                    bem = new Bem(codigo, nome,tombo, descricao, localizacao, categoria);
+                    System.out.println(bem.toString());
+                    bens.add(bem);
                 }
-            }catch (SQLException e){
-                System.out.println("Erro ao buscar");
-                e.printStackTrace();
+
+                rs.close();
+                statement.close();
+
+            }else{
+                conectar();
+                criarTabela();
+                return buscarBemByAtributo(atributo, value);
             }
+        }catch (SQLException e){
+            System.out.println("Erro ao buscar");
+            e.printStackTrace();
+        }
 
 
         return bens;
@@ -204,14 +204,16 @@ public class ConnectionBem  extends ConnectionSQLite {
         try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
             if (connection.isClosed() == false){
                 statement = connection.createStatement();
-
                 ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
                 connectionLocalizacao.conectar();
-                Localizacao localizacao1 = null;
-                localizacao1 = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacao.getCodigo());
+
+//                Localizacao localizacao1 = null;
+//                localizacao1 = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacao.getCodigo());
+//                System.out.println("LOCALIZACAO ENCONTRADA: " + localizacao1.getNome());
                 connectionLocalizacao.desconectar();
-                if (localizacao1 != null){
-                    String sql ="UPDATE bem SET localizacaocodigo = "+localizacao1.getCodigo()+" WHERE codigo = "+ bem.getCodigo()+";";
+
+                if (localizacao != null){
+                    String sql ="UPDATE bem SET localizacaocodigo = "+localizacao.getCodigo()+" WHERE codigo = "+ bem.getCodigo()+";";
 
                     statement.executeUpdate(sql);
                     statement.close();
@@ -220,7 +222,6 @@ public class ConnectionBem  extends ConnectionSQLite {
                 }else{
                     throw new LocalizacaoNaoEncontradaException();
                 }
-
 
             }else{
                 conectar();
@@ -233,4 +234,54 @@ public class ConnectionBem  extends ConnectionSQLite {
             return false;
         }
     }
+
+
+    public ArrayList<Bem> listarBens(){
+        ArrayList<Bem> bens = null; //array para retornar todos campos cadastrados organizando-os em 3-tuplas
+
+        try {
+            if (connection.isClosed() == false){
+                //configurações de variáveis para o banco
+                statement = connection.createStatement();
+                connection.setAutoCommit(false);
+                statement = connection.createStatement();
+
+                //script SQL
+                ResultSet rs = statement.executeQuery( "SELECT * FROM BEM;" );
+
+                bens = new ArrayList<>();
+
+                //organizando o Set lido do banco em outra variável (arraylist)
+                while ( rs.next() ) {
+                    Bem bem = null;
+                    Integer codigo = rs.getInt("codigo");
+                    String  nome = rs.getString("nome");
+                    String tombo  = rs.getString("tombo");
+                    String descricao  = rs.getString("descricao");
+                    Integer localInt  = rs.getInt("localizacaocodigo");
+                    Integer catInt = rs.getInt("categoriacodigo");
+                    Localizacao localizacao = Bot.buscarLocalizacao(localInt);
+                    Categoria categoria = Bot.buscarCategoria(catInt);
+
+                    bem = new Bem(codigo, nome, tombo, descricao, localizacao, categoria);
+
+                    bens.add(bem);
+                }
+                rs.close();
+                statement.close();
+
+            }else{
+                conectar();
+                criarTabela();
+                //return "errou"; //listarCategorias();
+            }
+        }catch (SQLException e){
+            System.out.println("Erro ao listar");
+            e.printStackTrace();
+
+        }
+        return bens;
+
+    }
+
 }

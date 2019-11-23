@@ -1,7 +1,7 @@
 package br.com.ufrn.imd.lpii.classes.persistence;
 
-import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -67,7 +67,5 @@ public abstract class ConnectionSQLite {
 
         return null;
     }
-
-
 
 }

@@ -12,7 +12,7 @@ public class ConnectionCategoria extends ConnectionSQLite {
      * Método para criação da tabela categoria no banco de dados
      * @return Boolean indicando se ocorreu tudo pelo fluxo normal ou aconteceu alguma exceção
      * */
-     public Boolean criarTabela(){
+    public Boolean criarTabela(){
         try {
             if (connection.isClosed() == false){
 
@@ -53,7 +53,7 @@ public class ConnectionCategoria extends ConnectionSQLite {
             if (connection.isClosed() == false){
                 statement = connection.createStatement();
                 String sql ="INSERT INTO CATEGORIA ( NOME, DESCRICAO) " +
-                             "VALUES (\""+nome+"\",\""+descricao+"\");";
+                        "VALUES (\""+nome+"\",\""+descricao+"\");";
                 statement.executeUpdate(sql);
                 statement.close();
                 return true;

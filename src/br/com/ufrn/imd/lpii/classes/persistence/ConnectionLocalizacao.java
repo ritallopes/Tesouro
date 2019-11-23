@@ -18,7 +18,6 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
         try {
             if (connection.isClosed() == false){
 
-
                 statement = connection.createStatement();
                 //se a tabela já existir no banco ele continua se capturar exceção
                 //o codigo como autoincrement é gerado pelo próprio banco de dados de forma incremental
@@ -110,12 +109,11 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
                 //script SQL
                 ResultSet rs = statement.executeQuery( "SELECT * FROM LOCALIZACAO;" );
 
-
                 camposList = new ArrayList<>();
 
                 //organizando o Set lido do banco em outra variável (arraylist)
                 while ( rs.next() ) {
-                    HashMap<String, String> tupla= new HashMap<>();
+                    HashMap<String, String> tupla = new HashMap<>();
                     tupla.clear();
                     Integer codigo = rs.getInt("codigo");
                     tupla.put("codigo", codigo.toString());
@@ -154,6 +152,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
 
         try {
             if (connection.isClosed() == false){
+
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);
