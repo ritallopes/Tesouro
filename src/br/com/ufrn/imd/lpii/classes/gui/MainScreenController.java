@@ -36,7 +36,7 @@ public class MainScreenController {
         Task<Void> botTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                Bot.inicializacaoBot("1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc", displayArea, botStatus);
+                Bot.inicializacaoBot("1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc", displayArea, botStatus, scrollWindow);
                 return null;
             }
 
@@ -44,4 +44,6 @@ public class MainScreenController {
         Thread botThread = new Thread(botTask);
         botThread.start();
     }
+
+
 }

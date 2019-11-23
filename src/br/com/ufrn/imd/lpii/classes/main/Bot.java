@@ -19,6 +19,7 @@ import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -38,7 +39,7 @@ public class Bot{
     static String bem;
 
 
-    public static <localizacao> void inicializacaoBot(String token, TextFlow displayArea, Label botStatus) throws IOException, InterruptedException, LocalizacaoNaoEncontradaException {
+    public static <localizacao> void inicializacaoBot(String token, TextFlow displayArea, Label botStatus, ScrollPane panel) throws IOException, InterruptedException, LocalizacaoNaoEncontradaException {
 
         //token do nosso bot patrimonial: 1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc
 
@@ -84,7 +85,7 @@ public class Bot{
 
                 //String mensagem = update.message().text();
 
-                addLine(displayArea, "                                              " + update.message().chat().firstName() + " : " + update.message().text() + "\n");
+                addLine(displayArea, "                                              " + update.message().chat().firstName() + " : " + update.message().text() + "\n", panel);
 
                 //envio de 'escrevendo' antes de mandar a resposta
                 baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
@@ -100,7 +101,7 @@ public class Bot{
                     if(update.message().text().equals("/cadastrar_localizacao")){
                         //enviando ao usuario a mensagem para inserir a localizacao
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
-                        addLine(displayArea, "Insira o nome da localização:\n");
+                        addLine(displayArea, "Insira o nome da localização:\n", panel);
                         //mudando o estado
                         estado = Estado.CADASTRAR_LOCALIZACAO;
                         break;
@@ -109,7 +110,7 @@ public class Bot{
                     if(update.message().text().equals("/cadastrar_categoria_do_bem")){
                         //enviando ao usuario a mensagem para inserir o código
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código da categoria(ex: 123)"));
-                        addLine(displayArea, "Insira o código da categoria(ex: 123)\n");
+                        addLine(displayArea, "Insira o código da categoria(ex: 123)\n", panel);
                         //mudando o estado
                         estado = Estado.CADASTRAR_CATEGORIA_DO_BEM;
                         break;
@@ -165,7 +166,7 @@ public class Bot{
                     if(contador == 0){
                         //pede ao usuario o proximo campo que deve ser inserido
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descricao do local"));
-                        addLine(displayArea, "Insira a descrição do local: \n");
+                        addLine(displayArea, "Insira a descrição do local: \n", panel);
                         localizacao = update.message().text();
                         contador++;
                         break;
@@ -177,7 +178,7 @@ public class Bot{
                     contador = 0;
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local: "+ localizacao));
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
-                    addLine(displayArea, "Local: " + localizacao + "\n" + "Descrição: " + descricao + "\n");
+                    addLine(displayArea, "Local: " + localizacao + "\n" + "Descrição: " + descricao + "\n", panel);
                     localizacao = localizacao.toUpperCase();
                     descricao = descricao.toLowerCase();
                     Localizacao local = new Localizacao(null, localizacao, descricao);
@@ -530,7 +531,7 @@ public class Bot{
                     System.out.println("Mensagem enviada? " + sendResponse.isOk());
                 } else {
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Não entendi..."));
-                    addLine(displayArea, "Não entendi....\n");
+                    addLine(displayArea, "Não entendi....\n", panel);
                     //verificação se a mensagem foi enviada com sucesso
                     System.out.println("Mensagem enviada? " + sendResponse.isOk());
                     break;
@@ -640,10 +641,11 @@ public class Bot{
         return null;
     }
 
-    private static void addLine(TextFlow displayArea, String message) {
+    private static void addLine(TextFlow displayArea, String message, ScrollPane panel) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                panel.setVvalue(1.0d);
                 displayArea.getChildren().add(new Text(message));
             }
         });
