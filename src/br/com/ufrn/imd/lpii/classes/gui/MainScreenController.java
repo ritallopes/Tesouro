@@ -45,5 +45,9 @@ public class MainScreenController {
         botThread.start();
     }
 
+    public void finishButtonPressed(){
+        Bot.desativarBot(botStatus);
+    }
+
 
 }

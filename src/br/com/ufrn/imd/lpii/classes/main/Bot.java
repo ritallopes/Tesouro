@@ -18,9 +18,11 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
@@ -37,6 +39,7 @@ public class Bot{
     static String tombo;
     static String categoria;
     static String bem;
+    static String status = null;
 
 
     public static <localizacao> void inicializacaoBot(String token, TextFlow displayArea, Label botStatus, ScrollPane panel) throws IOException, InterruptedException, LocalizacaoNaoEncontradaException {
@@ -63,10 +66,11 @@ public class Bot{
 //        controller.updateDisplay(new Text("Ok"));
         //addLine(displayArea, "Qualquer uma");
 
-
+        status = "Ativado";
+        updateStatus(botStatus, status);
         //display.getChildren().add(new Text("Ok"));
         //loop infinito, que pode ser alterado para algum timer de intervalo curto
-        while (true) {
+        while (status.equals("Ativado")) {
             System.out.println("Info: Buscando novas mensagens...");
             //executa comando no Telegram para obter as mensagens pendentes a partir de um off-set (limite inicial)
             try{
@@ -89,7 +93,6 @@ public class Bot{
 
                 //envio de 'escrevendo' antes de mandar a resposta
                 baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
-                updateStatus(botStatus, ChatAction.typing.name());
                 //addLine(displayArea, ChatAction.typing.name());
 
                 //verificação de ação de chat foi enviada com sucesso
@@ -646,12 +649,23 @@ public class Bot{
             @Override
             public void run() {
                 panel.setVvalue(1.0d);
-                displayArea.getChildren().add(new Text(message));
+                Text text = new Text(message);
+                displayArea.getChildren().add(text);
             }
         });
     }
 
     private static void updateStatus(Label botStatus, String status) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                botStatus.setText(status);
+            }
+        });
+    }
+
+    public static void desativarBot(Label botStatus){
+        status = "Desativado";
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

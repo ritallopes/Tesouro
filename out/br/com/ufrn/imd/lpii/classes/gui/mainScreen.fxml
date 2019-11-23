@@ -13,7 +13,7 @@
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
          <children>
-            <ScrollPane fx:id="scrollWindow" prefHeight="514.0" prefWidth="590.0">
+            <ScrollPane fx:id="scrollWindow" maxWidth="590.0" prefHeight="514.0" prefWidth="590.0">
                <content>
                   <TextFlow fx:id="displayArea" prefHeight="280.0" prefWidth="800.0">
                      <opaqueInsets>
@@ -22,11 +22,11 @@
                   </TextFlow>
                </content>
             </ScrollPane>
-            <Label fx:id="botStatus" prefHeight="16.0" prefWidth="91.0" text="waiting..." />
+            <Label fx:id="botStatus" alignment="CENTER" prefHeight="16.0" prefWidth="91.0" text="StandBy" />
             <HBox alignment="CENTER" prefHeight="305.0" prefWidth="590.0" spacing="200.0">
                <children>
                   <Button fx:id="startButton" mnemonicParsing="false" onAction="#startButtonPressed" prefHeight="26.0" prefWidth="134.0" text="Iniciar Bot" />
-                  <Button fx:id="finishButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="133.0" text="Encerrar Bot" />
+                  <Button fx:id="finishButton" mnemonicParsing="false" onAction="#finishButtonPressed" prefHeight="26.0" prefWidth="133.0" text="Encerrar Bot" />
                </children>
             </HBox>
          </children>
