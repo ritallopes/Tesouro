@@ -9,18 +9,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.ufrn.imd.lpii.classes.gui.MainScreenController">
+<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.ufrn.imd.lpii.classes.gui.MainScreenController">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
          <children>
             <ScrollPane fx:id="scrollWindow" maxWidth="590.0" prefHeight="514.0" prefWidth="590.0">
                <content>
-                  <TextFlow fx:id="displayArea" prefHeight="280.0" prefWidth="800.0">
+                  <TextFlow fx:id="displayArea" prefHeight="256.0" prefWidth="590.0">
                      <opaqueInsets>
                         <Insets bottom="20.0" left="5.0" right="5.0" top="10.0" />
                      </opaqueInsets>
                   </TextFlow>
                </content>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </ScrollPane>
             <Label fx:id="botStatus" alignment="CENTER" prefHeight="16.0" prefWidth="91.0" text="StandBy" />
             <HBox alignment="CENTER" prefHeight="305.0" prefWidth="590.0" spacing="200.0">
@@ -29,6 +32,11 @@
                   <Button fx:id="finishButton" mnemonicParsing="false" onAction="#finishButtonPressed" prefHeight="26.0" prefWidth="133.0" text="Encerrar Bot" />
                </children>
             </HBox>
+            <Button fx:id="quitButton" alignment="CENTER" mnemonicParsing="false" onAction="#quitButtonPressed" prefHeight="26.0" prefWidth="111.0" text="Sair" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets left="310.0" />
+               </VBox.margin>
+            </Button>
          </children>
          <padding>
             <Insets bottom="20.0" left="5.0" right="5.0" top="10.0" />

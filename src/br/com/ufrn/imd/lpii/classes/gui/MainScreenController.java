@@ -1,6 +1,7 @@
 package br.com.ufrn.imd.lpii.classes.gui;
 
 import br.com.ufrn.imd.lpii.classes.main.Bot;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Window;
 
 import java.io.IOException;
 
@@ -29,6 +31,9 @@ public class MainScreenController {
     private Button finishButton;
 
     @FXML
+    private Button quitButton;
+
+    @FXML
     private Label botStatus;
 
     public void startButtonPressed(){
@@ -47,6 +52,15 @@ public class MainScreenController {
 
     public void finishButtonPressed(){
         Bot.desativarBot(botStatus);
+    }
+
+    public void quitButtonPressed(){
+        closeProgram();
+    }
+
+    private void closeProgram(){
+        Bot.desativarBot(botStatus);
+        Platform.exit();
     }
 
 

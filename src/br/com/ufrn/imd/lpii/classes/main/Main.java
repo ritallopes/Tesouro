@@ -44,7 +44,6 @@ public class Main{
                 Application.launch(Gui.class, args);
             }
         });
-
         userInterface.start();
     }
 
