@@ -21,6 +21,13 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
@@ -60,6 +67,8 @@ public class Bot{
 
         //controle de offset, isto é, a partir desse ID serão lidas as mensagens pendentes na fila
         int m = 0, contador = 0;
+        Image image = new Image("http://www.joaoalberto.com/wp-content/uploads/2013/04/12/kiko.jpg");
+        displayArea.setBackground(new Background(new BackgroundImage(image , null, null, null, BackgroundSize.DEFAULT)));
 //        FXMLLoader loader = new FXMLLoader(Bot.class.getResource("../gui/mainScreen.fxml"));
 //        loader.load();
 //        MainScreenController controller = loader.getController();
@@ -525,11 +534,9 @@ public class Bot{
                     break;
                 }
 
-
-
-                else if (update.message().text().equals("você é um autobot?")) {
-
-                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Não. Também não conheço Optimus Prime... ops..."));
+                else if (update.message().text().equals("feio")) {
+                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Você não vai com a minha cara??"));
+                    addLine(displayArea, "Você não vai com a minha cara??", panel);
                     //verificação se a mensagem foi enviada com sucesso
                     System.out.println("Mensagem enviada? " + sendResponse.isOk());
                 } else {
@@ -649,8 +656,12 @@ public class Bot{
             @Override
             public void run() {
                 panel.setVvalue(1.0d);
-                Text text = new Text(message);
-                displayArea.getChildren().add(text);
+                Label textLabel = new Label(message);
+                textLabel.setTextFill(Paint.valueOf("red"));
+                textLabel.setFont(Font.font(18));
+                textLabel.setStyle("-fx-font-weight: bold");
+                //textLabel.setBackground(new Background(new BackgroundFill(Paint.valueOf("purple"), null, null)));
+                displayArea.getChildren().add(textLabel);
             }
         });
     }
