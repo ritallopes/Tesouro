@@ -3,7 +3,7 @@ package br.com.ufrn.imd.lpii.classes.entities;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
-public class Localizacao {
+public class Localizacao implements Comparable<Localizacao>{
     public Integer getCodigo() {
         return codigo;
     }
@@ -82,4 +82,8 @@ public class Localizacao {
     }
 
 
+    @Override
+    public int compareTo(Localizacao o) {
+        return nome.compareTo(o.nome);
+    }
 }

@@ -1,6 +1,6 @@
 package br.com.ufrn.imd.lpii.classes.entities;
 
-public class Categoria {
+public class Categoria implements Comparable<Categoria> {
     private Integer codigo;
     private String nome;
     private String descricao;
@@ -53,5 +53,10 @@ public class Categoria {
             return false;
         }
         return (this.codigo == ((Categoria)obj).getCodigo());
+    }
+
+    @Override
+    public int compareTo(Categoria o) {
+        return nome.compareTo(o.nome) ;
     }
 }

@@ -1,6 +1,6 @@
 package br.com.ufrn.imd.lpii.classes.entities;
 
-public class Bem {
+public class Bem implements Comparable<Bem> {
     private Integer codigo;
     private String nome;
     private String tombo;
@@ -84,5 +84,10 @@ public class Bem {
             return false;
         }
         return ((this.codigo == ((Bem)obj).getCodigo()) && (this.categoria == ((Bem)obj).getCategoria()) && (this.localizacao == ((Bem)obj).getLocalizacao()));
+    }
+
+    @Override
+    public int compareTo(Bem o) {
+        return nome.compareTo(o.nome);
     }
 }
