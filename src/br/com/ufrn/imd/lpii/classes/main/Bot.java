@@ -21,6 +21,7 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -46,16 +47,15 @@ public class Bot{
     static String tombo;
     static String categoria;
     static String bem;
-    static String status = null;
+    static String status = "Desativado";
+    static String botName = "Tesouro";
 
 
-    public static <localizacao> void inicializacaoBot(String token, TextFlow displayArea, Label botStatus, ScrollPane panel) throws IOException, InterruptedException, LocalizacaoNaoEncontradaException {
+    public static <localizacao> void inicializacaoBot(String token, TextArea displayArea, Label botStatus) throws IOException, InterruptedException, LocalizacaoNaoEncontradaException {
 
         //token do nosso bot patrimonial: 1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc
-
         //criação do objeto bot com as informações de acesso
         TelegramBot bot = TelegramBotAdapter.build(token);
-
         //objeto responsavel por receber as mensagens
         GetUpdatesResponse updatesResponse = null;
 
@@ -69,15 +69,9 @@ public class Bot{
         int m = 0, contador = 0;
         Image image = new Image("http://www.joaoalberto.com/wp-content/uploads/2013/04/12/kiko.jpg");
         displayArea.setBackground(new Background(new BackgroundImage(image , null, null, null, BackgroundSize.DEFAULT)));
-//        FXMLLoader loader = new FXMLLoader(Bot.class.getResource("../gui/mainScreen.fxml"));
-//        loader.load();
-//        MainScreenController controller = loader.getController();
-//        controller.updateDisplay(new Text("Ok"));
-        //addLine(displayArea, "Qualquer uma");
-
         status = "Ativado";
         updateStatus(botStatus, status);
-        //display.getChildren().add(new Text("Ok"));
+
         //loop infinito, que pode ser alterado para algum timer de intervalo curto
         while (status.equals("Ativado")) {
             System.out.println("Info: Buscando novas mensagens...");
@@ -98,7 +92,7 @@ public class Bot{
 
                 //String mensagem = update.message().text();
 
-                addLine(displayArea, "                                              " + update.message().chat().firstName() + " : " + update.message().text() + "\n", panel);
+                addLine(displayArea, update.message().chat().firstName() + " : " + update.message().text() + "\n");
 
                 //envio de 'escrevendo' antes de mandar a resposta
                 baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
@@ -113,7 +107,7 @@ public class Bot{
                     if(update.message().text().equals("/cadastrar_localizacao")){
                         //enviando ao usuario a mensagem para inserir a localizacao
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
-                        addLine(displayArea, "Insira o nome da localização:\n", panel);
+                        addLine(displayArea, botName + ":" + " Insira o nome da localização:\n");
                         //mudando o estado
                         estado = Estado.CADASTRAR_LOCALIZACAO;
                         break;
@@ -122,7 +116,7 @@ public class Bot{
                     if(update.message().text().equals("/cadastrar_categoria_do_bem")){
                         //enviando ao usuario a mensagem para inserir o código
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código da categoria(ex: 123)"));
-                        addLine(displayArea, "Insira o código da categoria(ex: 123)\n", panel);
+                        addLine(displayArea, botName + ": " + "Insira o código da categoria(ex: 123)\n");
                         //mudando o estado
                         estado = Estado.CADASTRAR_CATEGORIA_DO_BEM;
                         break;
@@ -130,7 +124,8 @@ public class Bot{
                     //se o usuario quer cadastrar categoria do bem
                     if(update.message().text().equals("/cadastrar_bem")){
                         //enviando ao usuario a mensagem para inserir o código do bem
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código do bem(ex: 123)"));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código do bem(ex: 123):"));
+                        addLine(displayArea, botName + ": " + "Insira o código do bem(ex:123):\n");
                         //mudando o estado
                         estado = Estado.CADASTRAR_BEM;
                         break;
@@ -139,12 +134,14 @@ public class Bot{
                     //caso o usuário queira movimentar o bem
                     if (update.message().text().equals("/movimentar_bem")){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código do bem: "));
+                        addLine(displayArea, botName + ": " + "Insira o código do bem:\n");
                         estado = Estado.MOVIMENTAR_BEM;
                         break;
                     }
 
                     if(update.message().text().equals("/lista_bens_por_localizacao")){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização: "));
+                        addLine(displayArea, botName + ": " + "Insira o nome da localização:\n");
                         estado = Estado.LISTAR_BENS_DE_UMA_LOCALIZACAO;
                         break;
                     }
@@ -153,18 +150,21 @@ public class Bot{
                     //caso o usuário queira buscar um bem
                     if (update.message().text().equals("/buscar_bem_por_codigo")){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código do bem: "));
+                        addLine(displayArea, botName + ": " + "Insira o código do bem:\n");
                         estado = Estado.BUSCAR_BEM_POR_CODIGO;
                         break;
                     }
 
                     if (update.message().text().equals("/buscar_bem_por_nome")){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome do bem: "));
+                        addLine(displayArea, botName + ": " + "Insira o nome do bem:\n");
                         estado = Estado.BUSCAR_BEM_POR_NOME;
                         break;
                     }
 
                     if (update.message().text().equals("/busca_bem_por_descricao")){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descricao do bem: "));
+                        addLine(displayArea, botName + ": " + "Insira a descrição do bem:\n");
                         estado = Estado.BUSCAR_BEM_POR_DESCRICAO;
                         break;
                     }
@@ -178,7 +178,7 @@ public class Bot{
                     if(contador == 0){
                         //pede ao usuario o proximo campo que deve ser inserido
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descricao do local"));
-                        addLine(displayArea, "Insira a descrição do local: \n", panel);
+                        addLine(displayArea, botName + ": " + "Insira a descrição do local: \n");
                         localizacao = update.message().text();
                         contador++;
                         break;
@@ -190,7 +190,7 @@ public class Bot{
                     contador = 0;
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local: "+ localizacao));
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
-                    addLine(displayArea, "Local: " + localizacao + "\n" + "Descrição: " + descricao + "\n", panel);
+                    addLine(displayArea, botName + ": " + "Local: " + localizacao + "\n" + "Descrição: " + descricao + "\n");
                     localizacao = localizacao.toUpperCase();
                     descricao = descricao.toLowerCase();
                     Localizacao local = new Localizacao(null, localizacao, descricao);
@@ -199,6 +199,7 @@ public class Bot{
                     connectionLocalizacao.conectar();
                     if(connectionLocalizacao.cadastrarLocalizacao(local)){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localizacao inserida com sucesso!"));
+                        addLine(displayArea, botName + ": " + "Localizacao inserida com sucesso!\n");
                     }
                     connectionLocalizacao.desconectar();
                     break;
@@ -209,12 +210,14 @@ public class Bot{
                     if(contador == 0){
                         //pede ao usuario o proximo campo que deve ser inserido
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria"));
+                        addLine(displayArea, botName + ": " + "Insira o nome da categoria:\n");
                         String codigoStr = update.message().text();
                         codigo = Integer.parseInt(codigoStr);
                         contador++;
                         break;
                     }else if(contador == 1){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descrição da categoria"));
+                        addLine(displayArea, botName + ": " + "Insira a descrição da categoria:\n");
                         nome = update.message().text();
                         contador++;
                         break;
@@ -227,12 +230,15 @@ public class Bot{
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Código: "+ codigo));
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Nome: " + nome));
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
+                    addLine(displayArea, botName + ": "  + "Código: " + codigo + "\n" + "Nome: " + nome + "\n"
+                    + "Descrição: " + descricao + ".\n");
                     Categoria categoria = new Categoria(codigo, nome, descricao);
 
                     ConnectionCategoria connectionCategoria = new ConnectionCategoria();
                     connectionCategoria.conectar();
                     if(connectionCategoria.cadastrarCategoria(categoria)){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria inserida com sucesso!"));
+                        addLine(displayArea, botName + ": " + "Categoria inserida com sucesso!\n");
                     }
                     connectionCategoria.desconectar();
                     break;
@@ -243,27 +249,32 @@ public class Bot{
                     if(contador == 0){
                         //pede ao usuario o proximo campo que deve ser inserido
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome do bem"));
+                        addLine(displayArea, botName + ": " + "Insira o nome do bem:\n");
                         String codigoStr = update.message().text();
                         codigo = Integer.parseInt(codigoStr);
                         contador++;
                         break;
                     }else if(contador == 1){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o tombo do bem"));
+                        addLine(displayArea, botName + ": " + "Insira o tombo do bem:\n");
                         nome = update.message().text();
                         contador++;
                         break;
                     }else if(contador == 2){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descrição do bem"));
+                        addLine(displayArea, botName + ": " + "Insira a descrição do bem:\n");
                         tombo = update.message().text();
                         contador++;
                         break;
                     }else if(contador == 3){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
+                        addLine(displayArea, botName + ": " + "Insira o nome da localização:\n");
                         descricao = update.message().text();
                         contador++;
                         break;
                     }else if(contador == 4){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria"));
+                        addLine(displayArea, botName + ": " + "Insira o nome da categoria:\n");
                         localizacao = update.message().text();
                         contador++;
                         break;
@@ -281,13 +292,15 @@ public class Bot{
                     localizacao = localizacao.toUpperCase();
                     Localizacao local = buscarLocalizacao(localizacao);
                     if(local == null){
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localização inexistente no banco da dados!"));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localização inexistente no banco de dados!"));
+                        addLine(displayArea, botName + ": " + "Localização inexistente no banco de dados!\n");
                         estado = Estado.STANDBY;
                         break;
                     }
                     Categoria cat = buscarCategoria(categoria);
                     if(cat == null){
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria inexistente no banco da dados!"));
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria inexistente no banco de dados!"));
+                        addLine(displayArea, botName + ": " + "Categoria inexistente no banco de dados!\n");
                         estado = Estado.STANDBY;
                         break;
                     }
@@ -297,6 +310,8 @@ public class Bot{
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localizacao: " + localizacao));
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria: " + categoria));
+                    addLine(displayArea, botName + ": " + "Código: " + codigo +"\n" + "Nome: " + nome + "\n" + "Tombo: " + tombo +
+                            "\n" + "Descrição: " + descricao + "\n" + "Localização: " + localizacao + "\n" + "Categoria: " + categoria + "\n");
 
                     Bem bem = new Bem(codigo, nome, tombo, descricao, local, cat);
 
@@ -304,6 +319,7 @@ public class Bot{
                     connectionBem.conectar();
                     if(connectionBem.cadastrarBem(bem)){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem inserido com sucesso!"));
+                        addLine(displayArea, botName + ": " + "Bem inserido com sucesso!\n");
                     }
                     connectionBem.desconectar();
                     estado = Estado.STANDBY;
@@ -363,8 +379,10 @@ public class Bot{
                     Bem bem = buscarBem(codigo);
                     if(bem != null){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), bem.toString()));
+                        addLine(displayArea, botName + ": " + bem.toString() + "\n");
                     }else{
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem não existe!"));
+                        addLine(displayArea, botName + ": " + "Bem não existe!");
                     }
                     connectionBem.desconectar();
                     estado = Estado.STANDBY;
@@ -380,8 +398,10 @@ public class Bot{
                     Bem b = buscarBem(bem);
                     if(b != null){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), b.toString()));
+                        addLine(displayArea, botName + ": " + b.toString() + "\n");
                     }else{
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem não existe!"));
+                        addLine(displayArea, botName + ": " + "Bem não existe!\n");
                     }
                     connectionBem.desconectar();
                     estado = Estado.STANDBY;
@@ -396,8 +416,10 @@ public class Bot{
                     Bem bem = buscarBemPorDescricao(descricao);
                     if(bem != null){
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), bem.toString()));
+                        addLine(displayArea, botName + ": " + bem.toString() + "\n");
                     }else{
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem não existe!"));
+                        addLine(displayArea, botName + ": " + "Bem não existe!\n");
                     }
                     connectionBem.desconectar();
                     estado = Estado.STANDBY;
@@ -420,6 +442,7 @@ public class Bot{
                         }
                     }
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+                    addLine(displayArea, botName + ": " + resposta);
                     connectionBem.desconectar();
                     estado = Estado.STANDBY;
                     break;
@@ -434,10 +457,12 @@ public class Bot{
                         bem = buscarBem(codigo);
                         if(bem != null){
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a nova localização do bem"));
+                            addLine(displayArea, botName + ": " + "Insira a nova localização do bem:\n");
                             contador++;
                             break;
                         }else{
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem inexistente!"));
+                            addLine(displayArea, botName + ": " + "Bem inexistente!\n");
                             estado = Estado.STANDBY;
                             connectionBem.desconectar();
                             break;
@@ -447,17 +472,21 @@ public class Bot{
                         localizacao = update.message().text();
                         Localizacao local = buscarLocalizacao(localizacao);
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local encontrado: " + local.getNome()));
+                        addLine(displayArea, botName + ": " + "Local encontrado -> " + local.getNome() + "\n");
                         if(local != null){
                             //bem.setLocalizacao(local);
                             if(connectionBem.atualizarLocalizacao(local, bem)){ //todo->parei aqui
                                 sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Movimentação do bem realizada com sucesso!"));
+                                addLine(displayArea, botName + ": " + "Movimentação do bem realizada com sucesso!\n");
                             }else{
-                                sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Erro ao movimentar bem"));
+                                sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Erro ao movimentar bem!"));
+                                addLine(displayArea, botName + ": " + "Erro ao movimentar bem!\n");
                             }
                             contador++;
                             break;
                         }else{
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localização inexistente!"));
+                            addLine(displayArea, botName + ": " + "Localização inexistente!\n");
                             estado = Estado.STANDBY;
                             connectionBem.desconectar();
                             break;
@@ -510,6 +539,7 @@ public class Bot{
                         resposta +="-----------\n";
                     }
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+                    addLine(displayArea, botName + ": " + resposta);
                     // addLine(displayArea, resposta);
 
                     connectionLocalizacao.desconectar();
@@ -529,19 +559,24 @@ public class Bot{
                         resposta += "-----------\n";
                     }
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+                    addLine(displayArea, botName + ": " + resposta);
                     connectionCategoria.desconectar();
                     estado = Estado.STANDBY;
                     break;
                 }
-
-                else if (update.message().text().equals("feio")) {
+                else if(update.message().text().equals("Vou te bater")){
+                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "MAMÃAAAEEE!!!"));
+                    addLine(displayArea, botName + ": " + "MAMÃAAAEEE!!!\n");
+                }
+                else if (update.message().text().equals("feio") || update.message().text().equals("Feio") || update.message().text().equals("idiota")
+                || update.message().text().equals("Idiota")) {
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Você não vai com a minha cara??"));
-                    addLine(displayArea, "Você não vai com a minha cara??", panel);
+                    addLine(displayArea, botName + ": " + "Você não vai com a minha cara??\n");
                     //verificação se a mensagem foi enviada com sucesso
                     System.out.println("Mensagem enviada? " + sendResponse.isOk());
                 } else {
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Não entendi..."));
-                    addLine(displayArea, "Não entendi....\n", panel);
+                    addLine(displayArea, botName + ": " + "Não entendi....\n");
                     //verificação se a mensagem foi enviada com sucesso
                     System.out.println("Mensagem enviada? " + sendResponse.isOk());
                     break;
@@ -651,17 +686,11 @@ public class Bot{
         return null;
     }
 
-    private static void addLine(TextFlow displayArea, String message, ScrollPane panel) {
+    private static void addLine(TextArea displayArea, String message) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                panel.setVvalue(1.0d);
-                Label textLabel = new Label(message);
-                textLabel.setTextFill(Paint.valueOf("red"));
-                textLabel.setFont(Font.font(18));
-                textLabel.setStyle("-fx-font-weight: bold");
-                //textLabel.setBackground(new Background(new BackgroundFill(Paint.valueOf("purple"), null, null)));
-                displayArea.getChildren().add(textLabel);
+                displayArea.appendText(message);
             }
         });
     }
@@ -684,5 +713,4 @@ public class Bot{
             }
         });
     }
-
 }

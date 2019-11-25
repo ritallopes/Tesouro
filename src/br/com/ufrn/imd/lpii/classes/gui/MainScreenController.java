@@ -1,17 +1,14 @@
 package br.com.ufrn.imd.lpii.classes.gui;
 
+
 import br.com.ufrn.imd.lpii.classes.main.Bot;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Window;
-
-import java.io.IOException;
 
 public class MainScreenController {
 
@@ -19,10 +16,10 @@ public class MainScreenController {
     private StackPane stackPane;
 
     @FXML
-    private ScrollPane scrollWindow;
+    private TextArea textArea;
 
     @FXML
-    private TextFlow displayArea;
+    private Label botStatus;
 
     @FXML
     private Button startButton;
@@ -33,15 +30,12 @@ public class MainScreenController {
     @FXML
     private Button quitButton;
 
-    @FXML
-    private Label botStatus;
-
     public void startButtonPressed(){
 
         Task<Void> botTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                Bot.inicializacaoBot("1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc", displayArea, botStatus, scrollWindow);
+                Bot.inicializacaoBot("1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc", textArea, botStatus);
                 return null;
             }
 

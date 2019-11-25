@@ -20,8 +20,8 @@ public class Gui extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("mainScreen.fxml"));
         //root.setUserData(new Date());
-        primaryStage.setTitle("Bot Window");
-        primaryStage.setScene(new Scene(root, 400, 600));
+        primaryStage.setTitle("Tesouro - Gerenciamento de Banco de Dados");
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(e -> {
