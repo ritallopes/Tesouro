@@ -36,9 +36,10 @@ public abstract class ConnectionSQLite {
 
     public Boolean desconectar() {
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 connection.close();
             }
+            System.out.println("Desconectado ao banco de dados");
             return true;
         }catch (SQLException e){
             System.out.println("Erro ao fechar banco");
@@ -50,7 +51,7 @@ public abstract class ConnectionSQLite {
 
     public Boolean apagarTabela(String nomeTabela){
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 statement = connection.createStatement();
                 String sql = "DROP TABLE IF EXISTS "+nomeTabela+";";
                 statement.executeUpdate(sql);

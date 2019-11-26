@@ -19,7 +19,7 @@ public class ConnectionBem  extends ConnectionSQLite {
      * */
     public Boolean criarTabela(){
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 statement = connection.createStatement();
 
                 //se a tabela já existir no banco ele continua se capturar exceção
@@ -57,7 +57,7 @@ public class ConnectionBem  extends ConnectionSQLite {
 
     public Boolean cadastrarBem(Bem bem){
         try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 System.out.println(bem.toString());
                 statement = connection.createStatement();
                 String sql ="INSERT INTO BEM(CODIGO, NOME, TOMBO, DESCRICAO, LOCALIZACAOCODIGO, CATEGORIACODIGO) " +
@@ -87,7 +87,7 @@ public class ConnectionBem  extends ConnectionSQLite {
         ArrayList< HashMap<String, String> > camposList = null; //array para retornar todos campos cadastrados organizando-os em 3-tuplas
 
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);
@@ -145,7 +145,7 @@ public class ConnectionBem  extends ConnectionSQLite {
     public ArrayList<Bem> buscarBemByAtributo(String atributo, String value){
         ArrayList<Bem> bens = null;
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);
@@ -201,24 +201,17 @@ public class ConnectionBem  extends ConnectionSQLite {
     }
 
     public Boolean atualizarLocalizacao(Localizacao localizacao, Bem bem) throws LocalizacaoNaoEncontradaException{
+        desconectar();
+        conectar();
         try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 statement = connection.createStatement();
-                ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
-                connectionLocalizacao.conectar();
-
-                Localizacao localizacao1 = null;
-                localizacao1 = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacao.getCodigo());
-                System.out.println("LOCALIZACAO ENCONTRADA: " + localizacao1.getNome());
-                connectionLocalizacao.desconectar();
-
-                if (localizacao1.getCodigo() != null){
-                    String sql ="UPDATE bem SET localizacaocodigo = "+ localizacao1.getCodigo()
-                            +" WHERE codigo = 1;";
+                if (localizacao.getCodigo() != null){
+                    String sql ="UPDATE bem SET localizacaocodigo = "+ localizacao.getCodigo()
+                            +" WHERE codigo =  "+bem.getCodigo()+";";
                     System.out.println(sql);
                     statement.executeUpdate(sql);
                     statement.close();
-
                     return true;
                 }else{
                     throw new LocalizacaoNaoEncontradaException();
@@ -237,11 +230,13 @@ public class ConnectionBem  extends ConnectionSQLite {
     }
 
 
+
+
     public ArrayList<Bem> listarBens(){
         ArrayList<Bem> bens = null; //array para retornar todos campos cadastrados organizando-os em 3-tuplas
 
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);

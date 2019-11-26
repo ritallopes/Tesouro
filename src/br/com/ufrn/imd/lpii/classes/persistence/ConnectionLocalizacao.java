@@ -16,7 +16,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
      * */
     public Boolean criarTabela(){
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
 
                 statement = connection.createStatement();
                 //se a tabela já existir no banco ele continua se capturar exceção
@@ -47,7 +47,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
 
     public Boolean cadastrarLocalizacao( String nome, String descricao){
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 statement = connection.createStatement();
                 String sql ="INSERT INTO LOCALIZACAO ( NOME, DESCRICAO) " +
                         "VALUES (\""+nome+"\",\""+descricao+"\");";
@@ -100,7 +100,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
         ArrayList< HashMap<String, String> > camposList = null; //array para retornar todos campos cadastrados organizando-os em 3-tuplas
 
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);
@@ -151,7 +151,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
         ArrayList<Localizacao> localizacoes = null; //array para retornar todos campos cadastrados organizando-os em 3-tuplas
 
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
 
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
@@ -198,7 +198,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
     public Localizacao buscarLocalizacaoByCodigo(Integer codigo){
         Localizacao localizacao = null;
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);

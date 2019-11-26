@@ -1,6 +1,3 @@
-/*
-@startuml
-
 package br.com.ufrn.imd.lpii.classes.main;
 
 import br.com.ufrn.imd.lpii.classes.entities.Bem;
@@ -321,51 +318,6 @@ public class Bot{
                     break;
                 }
 
-
-                //se o estado tiver sido alterado para cadastrar_localizacao
-//                    if(estado == Estado.MOVIMENTAR_BEM){
-//
-//                        String nome_localizacao;
-//                        Bem bemProcurado;
-//                        if(contador == 0){
-//                            //pede ao usuario o proximo campo que deve ser inserido
-//                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localizaçao"));
-//                            String codigoStr = update.message().text();
-//                            codigo = Integer.parseInt(codigoStr);
-//                            contador++;
-//                            break;
-//                        }else{
-//                            nome_localizacao = update.message().text();
-//                            contador++;
-//                            estado = Estado.STANDBY; //depois de todos os campos preeenchidos, volta ao estado standd-by
-//                        }
-//                        contador = 0;
-//
-//                        ConnectionBem connectionBem = new ConnectionBem();
-//                        connectionBem.conectar();
-//                        ArrayList<Bem> bens = new ArrayList<>();
-//                        bens = connectionBem.buscarBemByAtributo("codigo", codigo.toString());
-//                        bemProcurado = bens.get(0); //retorno unico
-//                        System.out.println(bemProcurado.toString());
-//
-//                        Localizacao localizacao = buscarLocalizacao(nome_localizacao);
-//                        try {
-//                            connectionBem.atualizarLocalizacao(localizacao, bemProcurado);
-//                        } catch (LocalizacaoNaoEncontradaException e) {
-//                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), e.getMessage()));
-//                        }
-//
-//                        bens = connectionBem.buscarBemByAtributo("codigo", codigo.toString());
-//                        bemProcurado = bens.get(0); //retorno unico
-//                        System.out.println(bemProcurado.toString());
-//
-//                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), bemProcurado.toString()));
-//
-//                        connectionBem.desconectar();
-//                        estado = Estado.STANDBY;
-//                        break;
-//                    }
-
                 if(estado == Estado.BUSCAR_BEM_POR_CODIGO){
                     //pede ao usuario o codigo da localização
                     codigo = Integer.parseInt(update.message().text()); //TODO pode disparar uma exceção
@@ -444,8 +396,6 @@ public class Bot{
                 }
 
                 if(estado == Estado.MOVIMENTAR_BEM){
-                    ConnectionBem connectionBem = new ConnectionBem();
-                    connectionBem.conectar();
                     Bem bem = null;
                     if(contador == 0){
                         codigo = Integer.parseInt(update.message().text());
@@ -459,70 +409,70 @@ public class Bot{
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem inexistente!"));
                             addLine(displayArea, botName + ": " + "Bem inexistente!\n");
                             estado = Estado.STANDBY;
-                            connectionBem.desconectar();
                             break;
                         }
 
                     }else if(contador == 1){
+                        bem = buscarBem(codigo);
                         localizacao = update.message().text().toUpperCase();
                         Localizacao local = buscarLocalizacao(localizacao);
-//                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local encontrado: " + local.getNome()));
-//                        addLine(displayArea, botName + ": " + "Local encontrado -> " + local.getNome() + "\n");
-                        if(local != null){
-                            //bem.setLocalizacao(local);
-                            if(connectionBem.atualizarLocalizacao(local, bem)){ //todo->parei aqui
+//                      sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local encontrado: " + local.getNome()));
+//                      addLine(displayArea, botName + ": " + "Local encontrado -> " + local.getNome() + "\n");
+                        if(local.getCodigo() != null){
+                            bem.setLocalizacao(local);
+                            ConnectionBem connectionBem = new ConnectionBem();
+                            connectionBem.conectar();
+                            if(connectionBem.atualizarLocalizacao(local, bem)){
                                 sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Movimentação do bem realizada com sucesso!"));
                                 addLine(displayArea, botName + ": " + "Movimentação do bem realizada com sucesso!\n");
                             }else{
                                 sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Erro ao movimentar bem!"));
                                 addLine(displayArea, botName + ": " + "Erro ao movimentar bem!\n");
                             }
+                            connectionBem.desconectar();
                             contador++;
                             break;
                         }else{
                             sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localização inexistente!"));
                             addLine(displayArea, botName + ": " + "Localização inexistente!\n");
                             estado = Estado.STANDBY;
-                            connectionBem.desconectar();
                             break;
                         }
 
-
                     }
 
-                    connectionBem.desconectar();
                     estado = Estado.STANDBY;
                     break;
                 }
 
 
-//                    if(update.message().text().equals("/buscar_bem_por_nome")){
-//                        String nome = "0"; //ler nome digitado pelo user
-//                        ConnectionBem connectionBem = new ConnectionBem();
-//                        connectionBem.conectar();
-//                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("nome", nome );
-//                        String resposta="";
-//                        for (Bem bem : bens){
-//                            resposta += bem.toString();
-//                            resposta += "---------------\n";
-//                        }
-//                        connectionBem.desconectar();
-//                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
-//
-//                    }
-//                    if(update.message().text().equals("/buscar_bem_por_descricao")){
-//                        String nome = "0"; //ler descricao digitada pelo user
-//                        ConnectionBem connectionBem = new ConnectionBem();
-//                        connectionBem.conectar();
-//                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("descricao", descricao );
-//                        String resposta="";
-//                        for (Bem bem : bens){
-//                            resposta += bem.toString();
-//                            resposta += "---------------\n";
-//                        }
-//                        connectionBem.desconectar();
-//                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
-//                    }
+                if(update.message().text().equals("/buscar_bem_por_nome")){
+                        String nome = "0"; //ler nome digitado pelo user
+                        ConnectionBem connectionBem = new ConnectionBem();
+                        connectionBem.conectar();
+                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("nome", nome );
+                        String resposta="";
+                        for (Bem bem : bens){
+                            resposta += bem.toString();
+                            resposta += "---------------\n";
+                        }
+                        connectionBem.desconectar();
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+
+                    }
+                if(update.message().text().equals("/buscar_bem_por_descricao")){
+                       String nome = "0"; //ler descricao digitada pelo user
+                        ConnectionBem connectionBem = new ConnectionBem();
+                      connectionBem.conectar();
+                           ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("descricao", descricao );
+                        String resposta="";
+                        for (Bem bem : bens){
+                            resposta += bem.toString();
+                            resposta += "---------------\n";
+                        }
+                        connectionBem.desconectar();
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+                }
 
                 if(update.message().text().equals("/listar_localizacoes")){
                     ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
@@ -559,6 +509,7 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
                 }
+
                 else if(update.message().text().equals("Vou te bater")){
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "MAMÃAAAEEE!!!"));
                     addLine(displayArea, botName + ": " + "MAMÃAAAEEE!!!\n");
@@ -589,6 +540,7 @@ public class Bot{
 
         for(Bem bem : bens){
             if(bem.getCodigo().equals(codigo)){
+                connectionBem.desconectar();
                 return bem;
             }
         }
@@ -602,6 +554,7 @@ public class Bot{
 
         for(Bem bem : bens){
             if(bem.getNome().equals(nomeBem)){
+                System.out.println(bem.toString());
                 return bem;
             }
         }
@@ -709,5 +662,3 @@ public class Bot{
         });
     }
 }
-@enduml
- */

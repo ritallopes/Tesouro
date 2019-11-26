@@ -14,7 +14,7 @@ public class ConnectionCategoria extends ConnectionSQLite {
      * */
     public Boolean criarTabela(){
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
 
 
                 statement = connection.createStatement();
@@ -50,7 +50,7 @@ public class ConnectionCategoria extends ConnectionSQLite {
 
     public Boolean cadastrarCategoria( String nome, String descricao){
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 statement = connection.createStatement();
                 String sql ="INSERT INTO CATEGORIA ( NOME, DESCRICAO) " +
                         "VALUES (\""+nome+"\",\""+descricao+"\");";
@@ -79,7 +79,7 @@ public class ConnectionCategoria extends ConnectionSQLite {
 
     public Boolean cadastrarCategoria(Categoria categoria){
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 statement = connection.createStatement();
                 String sql ="INSERT INTO CATEGORIA ( NOME, DESCRICAO) " +
                         "VALUES (\""+categoria.getNome()+"\",\""+categoria.getDescricao()+"\");";
@@ -109,7 +109,7 @@ public class ConnectionCategoria extends ConnectionSQLite {
         ArrayList< HashMap<String, String> > camposList = null; //array para retornar todos campos cadastrados organizando-os em 3-tuplas
 
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);
@@ -161,7 +161,7 @@ public class ConnectionCategoria extends ConnectionSQLite {
         ArrayList<Categoria> categorias = null; //array para retornar todos campos cadastrados organizando-os em 3-tuplas
 
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);
@@ -208,7 +208,7 @@ public class ConnectionCategoria extends ConnectionSQLite {
     public Categoria buscarCategoriaByCodigo(Integer codigo){
         Categoria categoria = null;
         try {
-            if (connection.isClosed() == false){
+            if (!connection.isClosed()){
                 //configurações de variáveis para o banco
                 statement = connection.createStatement();
                 connection.setAutoCommit(false);
