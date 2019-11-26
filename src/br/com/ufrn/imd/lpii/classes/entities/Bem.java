@@ -5,6 +5,7 @@ package br.com.ufrn.imd.lpii.classes.entities;
  * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, José Lúcio da Silva Júnior, Rita de Cassia Lino Lopes
  * @version 1.0
  * @since 2019.2
+ * hehe
  */
 public class Bem implements Comparable<Bem> {
     /**
