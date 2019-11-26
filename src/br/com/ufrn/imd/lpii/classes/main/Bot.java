@@ -12,9 +12,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ChatAction;
-import com.pengrad.telegrambot.request.GetUpdates;
-import com.pengrad.telegrambot.request.SendChatAction;
-import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.*;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -88,9 +86,13 @@ public class Bot{
 
                 addLine(displayArea, update.message().chat().firstName() + " : " + update.message().text() + "\n");
 
+<<<<<<< HEAD
                 //envio de 'escrevendo' antes de mandar a resposta
                 baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
                 //addLine(displayArea, ChatAction.typing.name());
+=======
+                   // String mensagem = update.message().text();
+>>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
 
                 //verificação de ação de chat foi enviada com sucesso
                 //addLine(displayArea, "Resposta de ChatAction foi enviada? " + baseResponse.isOk() + "\n");
@@ -140,6 +142,41 @@ public class Bot{
                         break;
                     }
 
+<<<<<<< HEAD
+=======
+                    //se o estado for stand-by(padrao)
+                    if(estado == Estado.standby){
+                        //se o usuario quer cadastrar localizacao
+                        if(update.message().text().equals("/cadastrar_localizacao")){
+                            //enviando ao usuario a mensagem para inserir a localizacao
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
+                            //mudando o estado
+                            estado = Estado.cadastrar_localizacao;
+                            break;
+                        }
+                        if(update.message().text().equals("/feio")){
+                            estado = Estado.feio;
+                        }
+                        if(update.message().text().equals("/choro")){
+                            estado = Estado.choro;
+                        }
+                        //se o usuario quer cadastrar categoria de bem
+                        if(update.message().text().equals("/cadastrar_categoria_do_bem")){
+                            //enviando ao usuario a mensagem para inserir o nome ca categoria
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria"));
+                            //mudando o estado
+                            estado = Estado.cadastrar_categoria_do_bem;
+                            break;
+                        }
+                        //se o usuario quer cadastrar bem
+                        if(update.message().text().equals("/cadastrar_bem")){
+                            //enviando ao usuario a mensagem para inserir o nome ca categoria
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o codigo do bem"));
+                            //mudando o estado
+                            estado = Estado.cadastrar_bem;
+                            break;
+                        }
+>>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
 
                     //caso o usuário queira buscar um bem
                     if (update.message().text().equals("/buscar_bem_por_codigo")){
@@ -607,7 +644,20 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
 
+<<<<<<< HEAD
                 }
+=======
+                    } if(estado == Estado.feio){
+                        sendResponse = bot.execute(new SendPhoto(update.message().chat().id(),"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBPOml4UFrbZlhVdlmnUF6eMm8rWrp7nn4PD9WvrV2lwmG899p&s"));
+                        estado = Estado.standby;
+                        break;
+                    } if(estado == Estado.choro){
+                        sendResponse = bot.execute(new SendVoice(update.message().chat().id(), "AwADAQADiQADcOwQRmgkTkCyMlHGFgQ"));
+                        estado = Estado.standby;
+                        break;
+                    }
+                    else if (update.message().text().equals("você é um autobot?")) {
+>>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
 
 
                 if(update.message().text().equals("/listar_categorias")){
@@ -645,6 +695,7 @@ public class Bot{
                 }
 
             }
+<<<<<<< HEAD
 
         }
     }
@@ -658,6 +709,8 @@ public class Bot{
             if(bem.getCodigo().equals(codigo)){
                 connectionBem.desconectar();
                 return bem;
+=======
+>>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
             }
         }
         connectionBem.desconectar();
@@ -691,6 +744,7 @@ public class Bot{
         return null;
     }
 
+<<<<<<< HEAD
 
     public static Localizacao buscarLocalizacao(String local) {
         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
@@ -777,4 +831,6 @@ public class Bot{
             }
         });
     }
+=======
+>>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
 }
