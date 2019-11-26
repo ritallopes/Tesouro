@@ -7,6 +7,7 @@ import br.com.ufrn.imd.lpii.classes.persistence.ConnectionBem;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionCategoria;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionLocalizacao;
 import br.com.ufrn.imd.lpii.exceptions.*;
+
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
@@ -17,14 +18,10 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
+
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundSize;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +40,7 @@ public class Bot{
     static String botName = "Tesouro";
 
 
-    public static <localizacao> void inicializacaoBot(String token, TextArea displayArea, Label botStatus) throws IOException, InterruptedException, LocalizacaoNaoEncontradaException {
+    public static void inicializacaoBot(String token, TextArea displayArea, Label botStatus) throws IOException, InterruptedException, LocalizacaoNaoEncontradaException {
 
         //token do nosso bot patrimonial: 1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc
         //criação do objeto bot com as informações de acesso
@@ -59,8 +56,6 @@ public class Bot{
 
         //controle de offset, isto é, a partir desse ID serão lidas as mensagens pendentes na fila
         int m = 0, contador = 0;
-        Image image = new Image("http://www.joaoalberto.com/wp-content/uploads/2013/04/12/kiko.jpg");
-        displayArea.setBackground(new Background(new BackgroundImage(image , null, null, null, BackgroundSize.DEFAULT)));
         status = "Ativado";
         updateStatus(botStatus, status);
 
@@ -83,8 +78,8 @@ public class Bot{
                 m = update.updateId() + 1;
 
                 if (update.message().text().equals("/sair")){
-                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Operação Cancelada: "));
-                    addLine(displayArea, botName + ": " + "Operação Cancelada:\n");
+                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Operação Cancelada!"));
+                    addLine(displayArea, botName + ": " + "Operação Cancelada!\n");
                     estado = Estado.STANDBY;
                     break;
                 }
@@ -193,8 +188,6 @@ public class Bot{
                         estado = Estado.GERAR_RELATORIO;
                         break;
                     }
-
-
 
                 }
 
@@ -449,8 +442,7 @@ public class Bot{
                         bem = buscarBem(codigo);
                         localizacao = update.message().text().toUpperCase();
                         Localizacao local = buscarLocalizacao(localizacao);
-//                      sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local encontrado: " + local.getNome()));
-//                      addLine(displayArea, botName + ": " + "Local encontrado -> " + local.getNome() + "\n");
+
                         if(local.getCodigo() != null){
                             bem.setLocalizacao(local);
                             ConnectionBem connectionBem = new ConnectionBem();
@@ -581,7 +573,8 @@ public class Bot{
                         }
                         connectionBem.desconectar();
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
-
+                        addLine(displayArea, botName + ": " + resposta);
+                        break;
                     }
                 if(update.message().text().equals("/buscar_bem_por_descricao")){
                        String nome = "0"; //ler descricao digitada pelo user
@@ -595,6 +588,8 @@ public class Bot{
                         }
                         connectionBem.desconectar();
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
+                        addLine(displayArea, botName + ": " + resposta);
+                        break;
                 }
 
                 if(update.message().text().equals("/listar_localizacoes")){
@@ -608,8 +603,6 @@ public class Bot{
                     }
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
                     addLine(displayArea, botName + ": " + resposta);
-                    // addLine(displayArea, resposta);
-
                     connectionLocalizacao.desconectar();
                     estado = Estado.STANDBY;
                     break;

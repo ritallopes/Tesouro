@@ -1,6 +1,15 @@
 package br.com.ufrn.imd.lpii.classes.entities;
 
+/**
+ *Classe Bem - representação do bem(patrimônio).
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, José Lúcio da Silva Júnior, Rita de Cassia Lino Lopes
+ * @version 1.0
+ * @since 2019.2
+ */
 public class Bem implements Comparable<Bem> {
+    /**
+     * Param
+     */
     private Integer codigo;
     private String nome;
     private String tombo;
