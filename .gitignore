@@ -1,6 +1,5 @@
 # Compiled class file
 *.class
-/src/br/com/ufrn/imd/lpii/data/tesouro.db
 
 # Log file
 *.log
