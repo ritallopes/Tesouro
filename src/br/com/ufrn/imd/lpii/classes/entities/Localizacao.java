@@ -4,6 +4,10 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
 public class Localizacao implements Comparable<Localizacao>{
+    private Integer codigo;
+    private String nome;
+    private String descricao;
+
     public Integer getCodigo() {
         return codigo;
     }
@@ -11,10 +15,6 @@ public class Localizacao implements Comparable<Localizacao>{
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
-
-    private Integer codigo;
-    private String nome;
-    private String descricao;
 
     //Construtores
     public Localizacao() {

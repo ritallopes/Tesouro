@@ -22,6 +22,7 @@ public class Bem implements Comparable<Bem> {
 
     public Bem(Integer codigo, String nome, String tombo, String descricao, Localizacao localizacao, Categoria categoria) {
         this.codigo = codigo;
+        this.tombo = tombo;
         this.nome = nome;
         this.descricao = descricao;
         this.localizacao = localizacao;
@@ -80,9 +81,10 @@ public class Bem implements Comparable<Bem> {
 
     @Override
     public String toString() {
-        return "Codigo: "+this.codigo.toString()+"\n"+"" +
-                "Nome: "+this.nome+"\n"+
-                "Descricao: "+this.descricao+"\n"+
+        return "Codigo: " + this.codigo.toString()+"\n"+"" +
+                "Nome: " + this.nome+"\n"+
+                "Tombo: " + this.tombo +"\n" +
+                "Descricao: " + this.descricao+"\n"+
                 "Nome da Categoria: " + this.categoria.getNome()+"\n" +
                 "Localizacao : "+ this.localizacao.getNome()+"\n";
     }
