@@ -1,6 +1,9 @@
 package br.com.ufrn.imd.lpii.classes.persistence;
 
+import br.com.ufrn.imd.lpii.classes.entities.Bem;
 import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
+import br.com.ufrn.imd.lpii.exceptions.LocalizacaoNaoEncontradaException;
+import br.com.ufrn.imd.lpii.exceptions.LocalizacaoUsadaException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,7 +53,7 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
             if (!connection.isClosed()){
                 statement = connection.createStatement();
                 String sql ="INSERT INTO LOCALIZACAO ( NOME, DESCRICAO) " +
-                        "VALUES (\""+nome+"\",\""+descricao+"\");";
+                        "VALUES (\""+nome.toUpperCase()+"\",\""+descricao+"\");";
                 statement.executeUpdate(sql);
                 statement.close();
                 return true;
@@ -230,4 +233,47 @@ public class ConnectionLocalizacao extends ConnectionSQLite{
         }
         return localizacao;
     }
+
+    public Boolean apagarLocalizacao(Localizacao localizacao) throws LocalizacaoNaoEncontradaException, LocalizacaoUsadaException {
+        try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
+            if (!connection.isClosed()){
+                desconectar();
+
+                ConnectionBem connectionBem = new ConnectionBem();
+                connectionBem.conectar();
+                ArrayList<Bem> bens = connectionBem.listarBens();
+                for (Bem bem : bens){
+                    if (bem.getLocalizacao().equals(localizacao)){
+                        localizacao = null;
+                        throw new LocalizacaoUsadaException();
+                    }
+                }
+                connectionBem.desconectar();
+
+
+                conectar();
+                if (localizacao != null){
+                    statement = connection.createStatement();
+                    String sql ="DELETE FROM localizacao WHERE codigo = "+localizacao.getCodigo()+" ;";
+                    System.out.println(sql);
+                    statement.executeUpdate(sql);
+                    statement.close();
+                    return true;
+                }else{
+                    throw new LocalizacaoNaoEncontradaException();
+                }
+
+            }else{
+                conectar();
+                criarTabela();
+                return apagarLocalizacao(localizacao);
+            }
+        }catch (SQLException e){
+            System.out.println("Erro ao apagar Localizaçao");
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
 }

@@ -1,6 +1,9 @@
 package br.com.ufrn.imd.lpii.classes.persistence;
 
+import br.com.ufrn.imd.lpii.classes.entities.Bem;
 import br.com.ufrn.imd.lpii.classes.entities.Categoria;
+import br.com.ufrn.imd.lpii.exceptions.CategoriaNaoEncontradaException;
+import br.com.ufrn.imd.lpii.exceptions.CategoriaUsadaException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -239,5 +242,47 @@ public class ConnectionCategoria extends ConnectionSQLite {
             e.printStackTrace();
         }
         return categoria;
+    }
+
+
+    public Boolean apagarCategoria(Categoria categoria) throws CategoriaNaoEncontradaException, CategoriaUsadaException {
+        try {
+            if (!connection.isClosed()){
+                desconectar();
+
+                ConnectionBem connectionBem = new ConnectionBem();
+                connectionBem.conectar();
+                ArrayList<Bem> bens = connectionBem.listarBens();
+                for (Bem bem : bens){
+                    if (bem.getCategoria().equals(categoria)){
+                        categoria = null;
+                        throw new CategoriaUsadaException();
+                    }
+                }
+                connectionBem.desconectar();
+
+                conectar();
+                if (categoria != null){
+                    statement = connection.createStatement();
+                    String sql ="DELETE FROM categoria WHERE codigo = "+categoria.getCodigo()+" ;";
+                    System.out.println(sql);
+                    statement.executeUpdate(sql);
+                    statement.close();
+                    return true;
+                }else{
+                    throw new CategoriaNaoEncontradaException();
+                }
+
+            }else{
+                conectar();
+                criarTabela();
+                return apagarCategoria(categoria);
+            }
+        }catch (SQLException e){
+            System.out.println("Erro ao apagar Categoria");
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }

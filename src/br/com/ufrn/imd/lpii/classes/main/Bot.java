@@ -6,7 +6,7 @@ import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionBem;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionCategoria;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionLocalizacao;
-import br.com.ufrn.imd.lpii.exceptions.LocalizacaoNaoEncontradaException;
+import br.com.ufrn.imd.lpii.exceptions.*;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
@@ -158,6 +158,27 @@ public class Bot{
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira a descricao do bem: "));
                         addLine(displayArea, botName + ": " + "Insira a descrição do bem:\n");
                         estado = Estado.BUSCAR_BEM_POR_DESCRICAO;
+                        break;
+                    }
+
+                    if (update.message().text().equals("/apagar_bem")){
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o código do bem: "));
+                        addLine(displayArea, botName + ": " + "Insira o código do bem: \n");
+                        estado = Estado.APAGAR_BEM;
+                        break;
+                    }
+
+                    if (update.message().text().equals("/apagar_localizacao")){
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localizacao: "));
+                        addLine(displayArea, botName + ": " + "Insira o nome da localizacao: \n");
+                        estado = Estado.APAGAR_LOCALIZACAO;
+                        break;
+                    }
+
+                    if (update.message().text().equals("/apagar_categoria")){
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria: "));
+                        addLine(displayArea, botName + ": " + "Insira o nome da categoria: \n");
+                        estado = Estado.APAGAR_CATEGORIA;
                         break;
                     }
 
@@ -445,6 +466,92 @@ public class Bot{
                     break;
                 }
 
+                if(estado == Estado.APAGAR_BEM){
+                    codigo = Integer.parseInt(update.message().text());
+                    Bem bem = buscarBem(codigo);
+
+                    if(bem != null){
+                        ConnectionBem connectionBem = new ConnectionBem();
+                        connectionBem.conectar();
+                        try {
+                            connectionBem.apagarBem("codigo", bem.getCodigo().toString());
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem apagado com sucesso!"));
+                            addLine(displayArea, botName + ": " + "Bem apagado com sucesso!\n");
+                        } catch (BemNaoEncontradoException e) {
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), e.getMessage()));
+                            addLine(displayArea, botName + ": " + e.getMessage()+"\n");
+
+                        }
+                        connectionBem.desconectar();
+                        estado = Estado.STANDBY;
+                        break;
+                    }else{
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem inexistente!"));
+                        addLine(displayArea, botName + ": " + "Bem inexistente!\n");
+                        estado = Estado.STANDBY;
+                        break;
+                    }
+
+                }
+
+                if(estado == Estado.APAGAR_LOCALIZACAO){
+                    nome = update.message().text();
+                    Localizacao local = buscarLocalizacao(nome.toUpperCase());
+
+                    if(local != null){
+                        ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
+                        connectionLocalizacao.conectar();
+                        try {
+                            connectionLocalizacao.apagarLocalizacao(local);
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localizacao apagado com sucesso!"));
+                            addLine(displayArea, botName + ": " + "Localizacao apagado com sucesso!\n");
+                        } catch (LocalizacaoNaoEncontradaException e) {
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), e.getMessage()));
+                            addLine(displayArea, botName + ": " + e.getMessage()+"\n");
+                        }catch (LocalizacaoUsadaException e){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), e.getMessage()));
+                            addLine(displayArea, botName + ": " + e.getMessage()+"\n");
+                        }
+                        connectionLocalizacao.desconectar();
+                        estado = Estado.STANDBY;
+                        break;
+                    }else{
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Localizaçao inexistente!"));
+                        addLine(displayArea, botName + ": " + "Localizaçao inexistente!\n");
+                        estado = Estado.STANDBY;
+                        break;
+                    }
+                }
+
+                if(estado == Estado.APAGAR_CATEGORIA){
+                    nome = update.message().text();
+                    Categoria categoria = buscarCategoria(nome);
+
+                    if(categoria != null){
+                        ConnectionCategoria connectionCategoria = new ConnectionCategoria();
+                        connectionCategoria.conectar();
+                        try {
+                            connectionCategoria.apagarCategoria(categoria);
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria apagado com sucesso!"));
+                            addLine(displayArea, botName + ": " + "Categoria apagado com sucesso!\n");
+                        } catch (CategoriaNaoEncontradaException e) {
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), e.getMessage()));
+                            addLine(displayArea, botName + ": " + e.getMessage()+"\n");
+                        }catch (CategoriaUsadaException e){
+                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), e.getMessage()));
+                            addLine(displayArea, botName + ": " + e.getMessage()+"\n");
+                        }
+                        connectionCategoria.desconectar();
+                        estado = Estado.STANDBY;
+                        break;
+                    }else{
+                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Categoria inexistente!"));
+                        addLine(displayArea, botName + ": " + "Categoria inexistente!\n");
+                        estado = Estado.STANDBY;
+                        break;
+                    }
+                }
+
 
                 if(update.message().text().equals("/buscar_bem_por_nome")){
                         String nome = "0"; //ler nome digitado pelo user
@@ -582,7 +689,7 @@ public class Bot{
         ArrayList<Localizacao> localizacoes = connectionLocalizacao.listarLocalizacoes();
 
         for (Localizacao localizacao : localizacoes){
-            if(localizacao.getNome().equals(local)){
+            if(localizacao.getNome().equals(local.toUpperCase())){
                 connectionLocalizacao.desconectar();
                 return localizacao;
             }

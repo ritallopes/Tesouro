@@ -4,6 +4,7 @@ import br.com.ufrn.imd.lpii.classes.entities.Bem;
 import br.com.ufrn.imd.lpii.classes.entities.Categoria;
 import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
 import br.com.ufrn.imd.lpii.classes.main.Bot;
+import br.com.ufrn.imd.lpii.exceptions.BemNaoEncontradoException;
 import br.com.ufrn.imd.lpii.exceptions.LocalizacaoNaoEncontradaException;
 
 import java.sql.ResultSet;
@@ -277,6 +278,35 @@ public class ConnectionBem  extends ConnectionSQLite {
 
         }
         return bens;
+
+    }
+
+
+    public Boolean apagarBem(String campo, String value) throws BemNaoEncontradoException{
+        try {// String nome, String descricao, Integer codigoLocalizacao, Integer codigoCategoria
+            if (!connection.isClosed()){
+                statement = connection.createStatement();
+
+                if (value != null && campo !=null ){
+                    String sql ="DELETE FROM bem WHERE "+campo+" = "+value+" ;";
+                    System.out.println(sql);
+                    statement.executeUpdate(sql);
+                    statement.close();
+                    return true;
+                }else{
+                    throw new BemNaoEncontradoException();
+                }
+
+            }else{
+                conectar();
+                criarTabela();
+                return apagarBem(campo, value);
+            }
+        }catch (SQLException e){
+            System.out.println("Erro ao apagar Bem");
+            e.printStackTrace();
+            return false;
+        }
 
     }
 
