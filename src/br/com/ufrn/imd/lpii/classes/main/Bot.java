@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *Classe Bot - implementa o bot do telegram e executa métodos de acordo os comandos executados pelo usuário.
- * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, José Lúcio da Silva Júnior, Rita de Cassia Lino Lopes
+ *Classe Bot - implementa o bot do telegram e executa metodos de acordo os comandos executados pelo usuario.
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, Jose Lucio da Silva Junior, Rita de Cassia Lino Lopes
  * @version 1.0
  * @since 2019.2
  */
@@ -46,14 +46,14 @@ public class Bot{
     static String botName = "Tesouro";
 
     /**
-     * Método que inicializar o bot do telegram.
+     * Metodo que inicializar o bot do telegram.
      *
-     * O bot fica ativado até que o usuário o encerre pressionando o botão encerrar bot.
+     * O bot fica ativado ate que o usuario o encerre pressionando o botcao encerrar bot.
      *
-     * @param token token do bot criado no telegram. Usado para acessar o bot através do java.
-     * @param displayArea tela onde serão mostradas as mensagens entre o bot e o usuário.
+     * @param token token do bot criado no telegram. Usado para acessar o bot atraves do java.
+     * @param displayArea tela onde serao mostradas as mensagens entre o bot e o usuario.
      * @param botStatus indicador visual do estado do bot. Pode estar em standby, ativado ou desativado.
-     * @throws LocalizacaoNaoEncontradaException lança uma exceção caso a localização não exista no banco de dados.
+     * @throws LocalizacaoNaoEncontradaException lanca uma excecao caso a localizacao nao exista no banco de dados.
      */
     public static void inicializacaoBot(String token, TextArea displayArea, Label botStatus) throws LocalizacaoNaoEncontradaException {
 
@@ -192,7 +192,8 @@ public class Bot{
                         estado = Estado.APAGAR_CATEGORIA;
                         break;
                     }
-                    
+
+
                     if (update.message().text().equals("/gerar_relatorio")){
                         estado = Estado.GERAR_RELATORIO;
                         break;
@@ -565,7 +566,7 @@ public class Bot{
                         break;
                     }
                 }
-
+                //Se o estado for GERAR_RELATORIO
                 if(estado == Estado.GERAR_RELATORIO){
                     estado = Estado.STANDBY;
                 }
@@ -587,11 +588,11 @@ public class Bot{
 
                 }
 
-
+                //Se o comando for listar_categorias
                 if(update.message().text().equals("/listar_categorias")){
                     ConnectionCategoria connectionCategoria = new ConnectionCategoria();
-                    connectionCategoria.conectar();
-                    ArrayList<Categoria> categorias = connectionCategoria.listarCategorias();
+                    connectionCategoria.conectar();//conecta ao banco de dados.
+                    ArrayList<Categoria> categorias = connectionCategoria.listarCategorias();//recebe as categorias
                     String resposta = "";
                     for (Categoria categoria : categorias){
                         resposta += categoria.toString();
@@ -627,6 +628,12 @@ public class Bot{
         }
     }
 
+    /**
+     * Metodo que busca por um bem atraves do codigo.
+     *
+     * @param codigo codigo unico do bem.
+     * @return o bem encontrado ou null caso contrario.
+     */
     private static Bem buscarBem(Integer codigo) {
         ConnectionBem connectionBem = new ConnectionBem();
         connectionBem.conectar();
@@ -641,6 +648,13 @@ public class Bot{
         connectionBem.desconectar();
         return null;
     }
+
+    /**
+     * Metodo que busca por um bem atraves do nome do bem.
+     *
+     * @param nomeBem nome do bem.
+     * @return o bem encontrado ou null caso contrario.
+     */
     private static Bem buscarBem(String nomeBem) {
         ConnectionBem connectionBem = new ConnectionBem();
         connectionBem.conectar();
@@ -655,6 +669,13 @@ public class Bot{
         connectionBem.desconectar();
         return null;
     }
+
+    /**
+     * Metodo que busca por um bem atraves da descricao.
+     *
+     * @param descricao descricao do bem.
+     * @return retorna o bem encontrado ou null caso contrario.
+     */
     private static Bem buscarBemPorDescricao(String descricao) {
         ConnectionBem connectionBem = new ConnectionBem();
         connectionBem.conectar();
@@ -669,7 +690,12 @@ public class Bot{
         return null;
     }
 
-
+    /**
+     * Metodo que busca por uma localizacao por nome da localizacao.
+     *
+     * @param local localizacao a ser procurada.
+     * @return retorna a localizacao se encontrada ou null caso contrario.
+     */
     public static Localizacao buscarLocalizacao(String local) {
         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
         connectionLocalizacao.conectar();
@@ -684,6 +710,12 @@ public class Bot{
         connectionLocalizacao.desconectar();
         return null;
     }
+    /**
+     * Metodo que busca por uma localizacao atraves do codigo.
+     *
+     * @param codigo codigo unico da localizacao.
+     * @return retorna a localizacao encontrada ou null caso contrario.
+     */
     public static Localizacao buscarLocalizacao(int codigo) {
         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
         connectionLocalizacao.conectar();
@@ -698,7 +730,12 @@ public class Bot{
         connectionLocalizacao.desconectar();
         return null;
     }
-
+    /**
+     * Metodo que busca por uma categoria atraves do nome da categoria.
+     *
+     * @param cat nome da categoria.
+     * @return retorna a categoria encontrada ou null caso contrario.
+     */
     public static Categoria buscarCategoria(String cat) {
         ConnectionCategoria connectionCategoria = new ConnectionCategoria();
         connectionCategoria.conectar();
@@ -713,6 +750,12 @@ public class Bot{
         connectionCategoria.desconectar();
         return null;
     }
+    /**
+     * Metodo que busca por uma categoria atraves do codigo da categoria.
+     *
+     * @param codigo codigo unico da categoria.
+     * @return retorna a categoria encontrada ou null caso contrario.
+     */
     public static Categoria buscarCategoria(int codigo) {
         ConnectionCategoria connectionCategoria = new ConnectionCategoria();
         connectionCategoria.conectar();
@@ -728,6 +771,12 @@ public class Bot{
         return null;
     }
 
+    /**
+     * Metodo que atualiza a tela da interface com as mensagens enviadas pelo usuario e/ou bot.
+     *
+     * @param displayArea tela que mostra as mensagens.
+     * @param message mensagem a ser exibida na tela.
+     */
     private static void addLine(TextArea displayArea, String message) {
         Platform.runLater(new Runnable() {
             @Override
@@ -737,6 +786,13 @@ public class Bot{
         });
     }
 
+    /**
+     * Metodo que atualiza o status do bot.
+     *
+     * Pode ser ativado ou desativado
+     * @param botStatus label que mostra na tela o estado do bot.
+     * @param status string que armazena o estado do bot.
+     */
     private static void updateStatus(Label botStatus, String status) {
         Platform.runLater(new Runnable() {
             @Override
@@ -746,6 +802,11 @@ public class Bot{
         });
     }
 
+    /**
+     * Metodo que torna o bot inativo.
+     *
+     * @param botStatus label que mostra o status do bot.
+     */
     public static void desativarBot(Label botStatus){
         status = "Desativado";
         Platform.runLater(new Runnable() {

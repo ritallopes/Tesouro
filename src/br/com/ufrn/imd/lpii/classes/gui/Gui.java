@@ -11,8 +11,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- *Classe Gui - interface gráfica em javafx.
- * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, José Lúcio da Silva Júnior, Rita de Cassia Lino Lopes
+ *Classe Gui - interface grafica em javafx.
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, Jose Lucio da Silva Junior, Rita de Cassia Lino Lopes
  * @version 1.0
  * @since 2019.2
  */

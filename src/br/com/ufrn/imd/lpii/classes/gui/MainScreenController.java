@@ -11,8 +11,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 
 /**
- *Classe que controla os elementos da interface.
- * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, José Lúcio da Silva Júnior, Rita de Cassia Lino Lopes
+ *Classe que controla os elementos da interface grafica.
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, Jose Lucio da Silva Junior, Rita de Cassia Lino Lopes
  * @version 1.0
  * @since 2019.2
  */
@@ -37,7 +37,7 @@ public class MainScreenController {
     private Button quitButton;
 
     /**
-     * Método chamado ao pressionar o botão iniciar Bot.
+     * Metodo chamado ao pressionar o botao iniciar Bot.
      *
      * Cria-se uma nova tarefa que inicializa o bot e a executa em outro thread.
      */
@@ -56,7 +56,7 @@ public class MainScreenController {
     }
 
     /**
-     * Método chamado ao pressionar o botão encerrar Bot.
+     * Metodo chamado ao pressionar o botao encerrar Bot.
      *
      * Desativa o bot.
      */
@@ -64,15 +64,15 @@ public class MainScreenController {
         Bot.desativarBot(botStatus);
     }
     /**
-     * Método chamado ao pressionar o sair.
+     * Metodo chamado ao pressionar o botao sair.
      *
-     * Chama o método closeProgram para fechar o programa.
+     * Chama o metodo closeProgram para fechar o programa.
      */
     public void quitButtonPressed(){
         closeProgram();
     }
     /**
-     * Método que finaliza a execução do programa.
+     * Metodo que finaliza a execucao do programa.
      *
      * Desativa-se o bot e em seguida fecha o programa.
      */

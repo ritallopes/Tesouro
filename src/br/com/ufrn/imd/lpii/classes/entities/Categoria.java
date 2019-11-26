@@ -1,8 +1,8 @@
 package br.com.ufrn.imd.lpii.classes.entities;
 
 /**
- *Classe que representa as categorias dos bens(patrimônios).
- * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, José Lúcio da Silva Júnior, Rita de Cassia Lino Lopes
+ *Classe que representa as categorias dos bens(patrimonios).
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, Jose Lucio da Silva Junior, Rita de Cassia Lino Lopes
  * @version 1.0
  * @since 2019.2
  */
@@ -17,9 +17,9 @@ public class Categoria implements Comparable<Categoria> {
     /**
      * Construtor.
      *
-     * @param codigo código único da cateogira a ser cadastrada no banco de dados.
+     * @param codigo codigo unico da categoria a ser cadastrada no banco de dados.
      * @param nome  nome da categoria.
-     * @param descricao  descrição da categoria(ex.: Automóvel elétrico, móveis de metal, etc...).
+     * @param descricao  descricao da categoria(ex.: Automovel eletrico, moveis de metal, etc...).
      */
     public Categoria(Integer codigo, String nome, String descricao) {
         this.codigo = codigo;
@@ -29,40 +29,43 @@ public class Categoria implements Comparable<Categoria> {
 
     //getters e setters
     /**
-     * Método que acessa o código da categoria.
-     * @return retorna o código da categoria.
+     * Metodo que acessa o codigo da categoria.
+     * @return retorna o codigo da categoria.
      */
     public Integer getCodigo() {
         return codigo;
     }
     /**
-     *Método que modifica o código da categoria.
+     *Metodo que modifica o codigo da categoria.
+     *@param codigo codigo unico da categoria.
      */
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
     /**
-     * Método que acessa o nome da categoria.
+     * Metodo que acessa o nome da categoria.
      * @return retorna o nome da categoria.
      */
     public String getNome() {
         return nome;
     }
     /**
-     * Método que modifica o nome da categoria.
+     * Metodo que modifica o nome da categoria.
+     * @param nome nome da categoria.
      */
     public void setNome(String nome) {
         this.nome = nome;
     }
     /**
-     * Método que acessa a descrição da categoria.
-     * @return retorna a descrição da categoria.
+     * Metodo que acessa a descricao da categoria.
+     * @return retorna a descricao da categoria.
      */
     public String getDescricao() {
         return descricao;
     }
     /**
-     * Método que modifica a descrição da categoria.
+     * Metodo que modifica a descricao da categoria.
+     * @param descricao descricao da categoria.
      */
     public void setDescricao(String descricao) {
         this.descricao = descricao;

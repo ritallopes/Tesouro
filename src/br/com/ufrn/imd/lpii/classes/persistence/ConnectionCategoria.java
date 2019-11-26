@@ -9,7 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+/**
+ *Classe para conexao ao banco de dados pela categoria.
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, Jose Lucio da Silva Junior, Rita de Cassia Lino Lopes
+ * @version 1.0
+ * @since 2019.2
+ */
 public class ConnectionCategoria extends ConnectionSQLite {
     /**
      * Método para criação da tabela categoria no banco de dados

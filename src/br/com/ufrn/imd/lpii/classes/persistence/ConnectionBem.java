@@ -12,10 +12,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ *Classe de conexao com o banco de dados para o bem.
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, Jose Lucio da Silva Junior, Rita de Cassia Lino Lopes
+ * @version 1.0
+ * @since 2019.2
+ */
 public class ConnectionBem  extends ConnectionSQLite {
     /**
-     * Método para criação da tabela BEM no banco de dados
+     * Metodo para criação da tabela BEM no banco de dados
      * @return Boolean indicando se ocorreu tudo pelo fluxo normal ou aconteceu alguma exceção
      * */
     public Boolean criarTabela(){
@@ -84,7 +89,7 @@ public class ConnectionBem  extends ConnectionSQLite {
      *Método que a tabela Bem no banco e retorna todos os valores nela presentes
      * @return  ArrayList<HashMap<String, String> > : ArrayList com um map(chave, valor) indicando o nome o atributo e o valor dele em cada tupla
      * */
-    public ArrayList<HashMap<String, String> > listarBem(){
+    public ArrayList<HashMap<String, String>> listarBem(){
         ArrayList< HashMap<String, String> > camposList = null; //array para retornar todos campos cadastrados organizando-os em 3-tuplas
 
         try {

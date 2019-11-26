@@ -4,8 +4,8 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
 /**
- *Classe que representa as localizações em que os bens(patrimônios) podem ser alocados.
- * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, José Lúcio da Silva Júnior, Rita de Cassia Lino Lopes
+ *Classe que representa as localizacoes em que os bens(patrimonios) podem ser alocados.
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, Jose Lucio da Silva Junior, Rita de Cassia Lino Lopes
  * @version 1.0
  * @since 2019.2
  */
@@ -22,9 +22,9 @@ public class Localizacao implements Comparable<Localizacao>{
     /**
      * Construtor.
      *
-     * @param codigo código único da localização a ser cadastrada no banco de dados.
-     * @param nome  nome da localização(ex.: Natal, Mossoró,etc...).
-     * @param descricao  descrição da localização(ex.: quente, mais quente ainda, etc...).
+     * @param codigo codigo unico da localizacao a ser cadastrada no banco de dados.
+     * @param nome  nome da localizacao(ex.: Natal, Mossoro,etc...).
+     * @param descricao  descricao da localizacao(ex.: quente, mais quente ainda, etc...).
      */
     public Localizacao(Integer codigo, String nome, String descricao) {
         this.codigo = codigo;
@@ -34,40 +34,43 @@ public class Localizacao implements Comparable<Localizacao>{
 
     //getters e setters
     /**
-     * Método que acessa o código da localização.
-     * @return retorna o código da localização.
+     * Metodo que acessa o codigo da localizacao.
+     * @return retorna o codigo da localizacao.
      */
     public Integer getCodigo() {
         return codigo;
     }
     /**
-     *Método que modifica o código da localização.
+     *Metodo que modifica o codigo da localizacao.
+     * @param codigo codigo unico da localizacao.
      */
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
     /**
-     * Método que acessa o nome da localização.
-     * @return retorna o nome da localização.
+     * Metodo que acessa o nome da localizacao.
+     * @return retorna o nome da localizacao.
      */
     public String getNome() {
         return nome;
     }
     /**
-     * Método que modifica o nome da localização.
+     * Metodo que modifica o nome da localizacao.
+     * @param nome nome da localizacao
      */
     public void setNome(String nome) {
         this.nome = nome;
     }
     /**
-     * Método que acessa a descrição da localização.
-     * @return retorna a descrição da localização.
+     * Metodo que acessa a descricao da localizacao.
+     * @return retorna a descricao da localizacao.
      */
     public String getDescricao() {
         return descricao;
     }
     /**
-     * Método que modifica a descrição da localização.
+     * Metodo que modifica a descricao da localizacao.
+     * @param descricao descricao da localizacao.
      */
     public void setDescricao(String descricao) {
         this.descricao = descricao;
