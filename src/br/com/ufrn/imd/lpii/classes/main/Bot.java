@@ -12,7 +12,9 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ChatAction;
-import com.pengrad.telegrambot.request.*;
+import com.pengrad.telegrambot.request.GetUpdates;
+import com.pengrad.telegrambot.request.SendChatAction;
+import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -24,6 +26,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *Classe Bot - implementa o bot do telegram e executa métodos de acordo os comandos executados pelo usuário.
+ * @author Hilton Thallyson Vieira Machado, Igor Silva Bento, José Lúcio da Silva Júnior, Rita de Cassia Lino Lopes
+ * @version 1.0
+ * @since 2019.2
+ */
 public class Bot{
     //precisamos de variaveis estaticas pois se nao perderemos os dados inseridos pelo usuario antes de inserir no banco de dados
     static Estado estado = Estado.STANDBY;
@@ -37,8 +45,17 @@ public class Bot{
     static String status = "Desativado";
     static String botName = "Tesouro";
 
-
-    public static void inicializacaoBot(String token, TextArea displayArea, Label botStatus) throws IOException, InterruptedException, LocalizacaoNaoEncontradaException {
+    /**
+     * Método que inicializar o bot do telegram.
+     *
+     * O bot fica ativado até que o usuário o encerre pressionando o botão encerrar bot.
+     *
+     * @param token token do bot criado no telegram. Usado para acessar o bot através do java.
+     * @param displayArea tela onde serão mostradas as mensagens entre o bot e o usuário.
+     * @param botStatus indicador visual do estado do bot. Pode estar em standby, ativado ou desativado.
+     * @throws LocalizacaoNaoEncontradaException lança uma exceção caso a localização não exista no banco de dados.
+     */
+    public static void inicializacaoBot(String token, TextArea displayArea, Label botStatus) throws LocalizacaoNaoEncontradaException {
 
         //token do nosso bot patrimonial: 1048746356:AAEDDgr7PPTnQ0hQuxSaZdDp3AVVYErsTDc
         //criação do objeto bot com as informações de acesso
@@ -74,7 +91,7 @@ public class Bot{
             for (Update update : updates) {
                 //atualização do offset
                 m = update.updateId() + 1;
-
+                //se a mensagem digitada for /sair, o bot abandona a operação ques está executando e volta ao estado standby.
                 if (update.message().text().equals("/sair")){
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Operação Cancelada!"));
                     addLine(displayArea, botName + ": " + "Operação Cancelada!\n");
@@ -82,20 +99,10 @@ public class Bot{
                     break;
                 }
 
-                //String mensagem = update.message().text();
-
                 addLine(displayArea, update.message().chat().firstName() + " : " + update.message().text() + "\n");
 
-<<<<<<< HEAD
                 //envio de 'escrevendo' antes de mandar a resposta
                 baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
-                //addLine(displayArea, ChatAction.typing.name());
-=======
-                   // String mensagem = update.message().text();
->>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
-
-                //verificação de ação de chat foi enviada com sucesso
-                //addLine(displayArea, "Resposta de ChatAction foi enviada? " + baseResponse.isOk() + "\n");
 
                 //se o estado for stand-by(padrao)
                 if(estado == Estado.STANDBY){
@@ -142,41 +149,6 @@ public class Bot{
                         break;
                     }
 
-<<<<<<< HEAD
-=======
-                    //se o estado for stand-by(padrao)
-                    if(estado == Estado.standby){
-                        //se o usuario quer cadastrar localizacao
-                        if(update.message().text().equals("/cadastrar_localizacao")){
-                            //enviando ao usuario a mensagem para inserir a localizacao
-                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da localização"));
-                            //mudando o estado
-                            estado = Estado.cadastrar_localizacao;
-                            break;
-                        }
-                        if(update.message().text().equals("/feio")){
-                            estado = Estado.feio;
-                        }
-                        if(update.message().text().equals("/choro")){
-                            estado = Estado.choro;
-                        }
-                        //se o usuario quer cadastrar categoria de bem
-                        if(update.message().text().equals("/cadastrar_categoria_do_bem")){
-                            //enviando ao usuario a mensagem para inserir o nome ca categoria
-                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria"));
-                            //mudando o estado
-                            estado = Estado.cadastrar_categoria_do_bem;
-                            break;
-                        }
-                        //se o usuario quer cadastrar bem
-                        if(update.message().text().equals("/cadastrar_bem")){
-                            //enviando ao usuario a mensagem para inserir o nome ca categoria
-                            sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o codigo do bem"));
-                            //mudando o estado
-                            estado = Estado.cadastrar_bem;
-                            break;
-                        }
->>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
 
                     //caso o usuário queira buscar um bem
                     if (update.message().text().equals("/buscar_bem_por_codigo")){
@@ -220,7 +192,7 @@ public class Bot{
                         estado = Estado.APAGAR_CATEGORIA;
                         break;
                     }
-
+                    
                     if (update.message().text().equals("/gerar_relatorio")){
                         estado = Estado.GERAR_RELATORIO;
                         break;
@@ -286,7 +258,7 @@ public class Bot{
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Nome: " + nome));
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Descricao: " + descricao));
                     addLine(displayArea, botName + ": "  + "Código: " + codigo + "\n" + "Nome: " + nome + "\n"
-                    + "Descrição: " + descricao + ".\n");
+                            + "Descrição: " + descricao + ".\n");
                     Categoria categoria = new Categoria(codigo, nome, descricao);
 
                     ConnectionCategoria connectionCategoria = new ConnectionCategoria();
@@ -380,7 +352,7 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
                 }
-
+                //Se o estado tiver sido alterado para BUSCAR_BEM_POR_CODIGO.
                 if(estado == Estado.BUSCAR_BEM_POR_CODIGO){
                     //pede ao usuario o codigo da localização
                     codigo = Integer.parseInt(update.message().text()); //TODO pode disparar uma exceção
@@ -398,7 +370,7 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
                 }
-
+                //Se o estado tiver sido alterado para BUSCAR_BEM_POR_NOME.
                 if(estado == Estado.BUSCAR_BEM_POR_NOME){
                     //pede ao usuario o codigo da localização
                     bem = update.message().text();
@@ -417,6 +389,7 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
                 }
+                //Se o estado tiver sido alterado para BUSCAR_BEM_POR_DESCRICAO.
                 if(estado == Estado.BUSCAR_BEM_POR_DESCRICAO){
                     //pede ao usuario o codigo da localização
                     descricao = update.message().text();
@@ -435,7 +408,7 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
                 }
-
+                //Se o estado tiver sido alterado para LISTAR_BENS_DE_UMA_LOCALIZACAO.
                 if(estado == Estado.LISTAR_BENS_DE_UMA_LOCALIZACAO){
                     localizacao = update.message().text();
                     localizacao = localizacao.toUpperCase();
@@ -457,7 +430,7 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
                 }
-
+                ////Se o estado tiver sido alterado para MOVIMENTAR_BEM
                 if(estado == Estado.MOVIMENTAR_BEM){
                     Bem bem = null;
                     if(contador == 0){
@@ -506,7 +479,7 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
                 }
-
+                //Se o estado tiver sido alterado para APAGAR_BEM
                 if(estado == Estado.APAGAR_BEM){
                     codigo = Integer.parseInt(update.message().text());
                     Bem bem = buscarBem(codigo);
@@ -534,7 +507,7 @@ public class Bot{
                     }
 
                 }
-
+                //Se o estado tiver sido alterado para APAGAR_LOCALIZACAO.
                 if(estado == Estado.APAGAR_LOCALIZACAO){
                     nome = update.message().text();
                     Localizacao local = buscarLocalizacao(nome.toUpperCase());
@@ -563,7 +536,7 @@ public class Bot{
                         break;
                     }
                 }
-
+                //Se o estado tiver sido alterado para APAGAR_CATEGORIA
                 if(estado == Estado.APAGAR_CATEGORIA){
                     nome = update.message().text();
                     Categoria categoria = buscarCategoria(nome);
@@ -594,39 +567,7 @@ public class Bot{
                 }
 
                 if(estado == Estado.GERAR_RELATORIO){
-                   estado = Estado.STANDBY;
-                }
-
-
-                if(update.message().text().equals("/buscar_bem_por_nome")){
-                        String nome = "0"; //ler nome digitado pelo user
-                        ConnectionBem connectionBem = new ConnectionBem();
-                        connectionBem.conectar();
-                        ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("nome", nome );
-                        String resposta="";
-                        for (Bem bem : bens){
-                            resposta += bem.toString();
-                            resposta += "---------------\n";
-                        }
-                        connectionBem.desconectar();
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
-                        addLine(displayArea, botName + ": " + resposta);
-                        break;
-                    }
-                if(update.message().text().equals("/buscar_bem_por_descricao")){
-                       String nome = "0"; //ler descricao digitada pelo user
-                        ConnectionBem connectionBem = new ConnectionBem();
-                      connectionBem.conectar();
-                           ArrayList<Bem> bens = connectionBem.buscarBemByAtributo("descricao", descricao );
-                        String resposta="";
-                        for (Bem bem : bens){
-                            resposta += bem.toString();
-                            resposta += "---------------\n";
-                        }
-                        connectionBem.desconectar();
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resposta));
-                        addLine(displayArea, botName + ": " + resposta);
-                        break;
+                    estado = Estado.STANDBY;
                 }
 
                 if(update.message().text().equals("/listar_localizacoes")){
@@ -644,20 +585,7 @@ public class Bot{
                     estado = Estado.STANDBY;
                     break;
 
-<<<<<<< HEAD
                 }
-=======
-                    } if(estado == Estado.feio){
-                        sendResponse = bot.execute(new SendPhoto(update.message().chat().id(),"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBPOml4UFrbZlhVdlmnUF6eMm8rWrp7nn4PD9WvrV2lwmG899p&s"));
-                        estado = Estado.standby;
-                        break;
-                    } if(estado == Estado.choro){
-                        sendResponse = bot.execute(new SendVoice(update.message().chat().id(), "AwADAQADiQADcOwQRmgkTkCyMlHGFgQ"));
-                        estado = Estado.standby;
-                        break;
-                    }
-                    else if (update.message().text().equals("você é um autobot?")) {
->>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
 
 
                 if(update.message().text().equals("/listar_categorias")){
@@ -681,7 +609,7 @@ public class Bot{
                     addLine(displayArea, botName + ": " + "MAMÃAAAEEE!!!\n");
                 }
                 else if (update.message().text().equals("feio") || update.message().text().equals("Feio") || update.message().text().equals("idiota")
-                || update.message().text().equals("Idiota")) {
+                        || update.message().text().equals("Idiota")) {
                     sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Você não vai com a minha cara??"));
                     addLine(displayArea, botName + ": " + "Você não vai com a minha cara??\n");
                     //verificação se a mensagem foi enviada com sucesso
@@ -695,7 +623,6 @@ public class Bot{
                 }
 
             }
-<<<<<<< HEAD
 
         }
     }
@@ -709,8 +636,6 @@ public class Bot{
             if(bem.getCodigo().equals(codigo)){
                 connectionBem.desconectar();
                 return bem;
-=======
->>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
             }
         }
         connectionBem.desconectar();
@@ -744,7 +669,6 @@ public class Bot{
         return null;
     }
 
-<<<<<<< HEAD
 
     public static Localizacao buscarLocalizacao(String local) {
         ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
@@ -831,6 +755,4 @@ public class Bot{
             }
         });
     }
-=======
->>>>>>> 111e96b8d69f7c860586e1c112eda938953a2426
 }
