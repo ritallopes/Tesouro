@@ -7,6 +7,9 @@ _bot do telegram implementado em java para fins de avalição da disciplina do B
 - Hilton Thallysson (https://github.com/hiltonthallysson)
 - Rita Lopes (https://github.com/ritallopes)   
 
+## Como compilar
+```java -jar executavel.jar``` 
+
 ### Bibliotecas utilizadas   
 - javafx.application.Application;
 - javafx.fxml.FXMLLoader;
