@@ -207,14 +207,15 @@ public class ConnectionBem  extends ConnectionSQLite {
                 ConnectionLocalizacao connectionLocalizacao = new ConnectionLocalizacao();
                 connectionLocalizacao.conectar();
 
-//                Localizacao localizacao1 = null;
-//                localizacao1 = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacao.getCodigo());
-//                System.out.println("LOCALIZACAO ENCONTRADA: " + localizacao1.getNome());
+                Localizacao localizacao1 = null;
+                localizacao1 = connectionLocalizacao.buscarLocalizacaoByCodigo(localizacao.getCodigo());
+                System.out.println("LOCALIZACAO ENCONTRADA: " + localizacao1.getNome());
                 connectionLocalizacao.desconectar();
 
-                if (localizacao != null){
-                    String sql ="UPDATE bem SET localizacaocodigo = "+localizacao.getCodigo()+" WHERE codigo = "+ bem.getCodigo()+";";
-
+                if (localizacao1.getCodigo() != null){
+                    String sql ="UPDATE bem SET localizacaocodigo = "+ localizacao1.getCodigo()
+                            +" WHERE codigo = 1;";
+                    System.out.println(sql);
                     statement.executeUpdate(sql);
                     statement.close();
 

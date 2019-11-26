@@ -1,3 +1,6 @@
+/*
+@startuml
+
 package br.com.ufrn.imd.lpii.classes.main;
 
 import br.com.ufrn.imd.lpii.classes.entities.Bem;
@@ -461,10 +464,10 @@ public class Bot{
                         }
 
                     }else if(contador == 1){
-                        localizacao = update.message().text();
+                        localizacao = update.message().text().toUpperCase();
                         Localizacao local = buscarLocalizacao(localizacao);
-                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local encontrado: " + local.getNome()));
-                        addLine(displayArea, botName + ": " + "Local encontrado -> " + local.getNome() + "\n");
+//                        sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Local encontrado: " + local.getNome()));
+//                        addLine(displayArea, botName + ": " + "Local encontrado -> " + local.getNome() + "\n");
                         if(local != null){
                             //bem.setLocalizacao(local);
                             if(connectionBem.atualizarLocalizacao(local, bem)){ //todo->parei aqui
@@ -706,3 +709,5 @@ public class Bot{
         });
     }
 }
+@enduml
+ */

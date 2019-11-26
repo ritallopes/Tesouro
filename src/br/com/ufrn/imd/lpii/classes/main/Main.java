@@ -1,5 +1,7 @@
 package br.com.ufrn.imd.lpii.classes.main;
 
+import br.com.ufrn.imd.lpii.classes.entities.Bem;
+import br.com.ufrn.imd.lpii.classes.entities.Localizacao;
 import br.com.ufrn.imd.lpii.classes.gui.Gui;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionBem;
 import br.com.ufrn.imd.lpii.classes.persistence.ConnectionCategoria;
