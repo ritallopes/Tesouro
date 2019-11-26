@@ -82,6 +82,13 @@ public class Bot{
                 //atualização do offset
                 m = update.updateId() + 1;
 
+                if (update.message().text().equals("/sair")){
+                    sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Operação Cancelada: "));
+                    addLine(displayArea, botName + ": " + "Operação Cancelada:\n");
+                    estado = Estado.STANDBY;
+                    break;
+                }
+
                 //String mensagem = update.message().text();
 
                 addLine(displayArea, update.message().chat().firstName() + " : " + update.message().text() + "\n");
@@ -179,6 +186,11 @@ public class Bot{
                         sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Insira o nome da categoria: "));
                         addLine(displayArea, botName + ": " + "Insira o nome da categoria: \n");
                         estado = Estado.APAGAR_CATEGORIA;
+                        break;
+                    }
+
+                    if (update.message().text().equals("/gerar_relatorio")){
+                        estado = Estado.GERAR_RELATORIO;
                         break;
                     }
 
@@ -550,6 +562,10 @@ public class Bot{
                         estado = Estado.STANDBY;
                         break;
                     }
+                }
+
+                if(estado == Estado.GERAR_RELATORIO){
+                   estado = Estado.STANDBY;
                 }
 
 
